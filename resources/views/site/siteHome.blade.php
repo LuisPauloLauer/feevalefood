@@ -568,10 +568,6 @@
 @section('javascript')
     <script src="{{ asset('site/node_modules/js/plugin-jqtarea.js') }}"></script>
     <script>
-        @if ($message = Session::get('messageCheckOut'))
-            alert('{{$message}}');
-        @endif
-
         var modalProductObject = null;
         var modalProductId = null;
         var modalProductQnty = 0;

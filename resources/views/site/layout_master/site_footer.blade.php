@@ -13,7 +13,7 @@
                                 <div class="ftr__address__inner">
                                     <div class="ftr__address">
                                         <div class="ftr__address__icon">
-                                            <i class="fa fa-map-marker"></i>
+                                            <i class="fa fa-map-marker-alt"></i>
                                         </div>
                                         <div class="frt__address__details">
                                             <p>Rua: {{$Store->street}} Nº {{$Store->number}}</p>
@@ -22,7 +22,7 @@
                                     </div>
                                     <div class="ftr__address">
                                         <div class="ftr__address__icon">
-                                            <i class="fa fa-whatsapp"></i>
+                                            <i class="fab fa-whatsapp"></i>
                                         </div>
                                         <div class="frt__address__details">
                                             <p><a target="_blank" title="WhatsApp" href="https://api.whatsapp.com/send?l=pt_br&phone=55{{(($Store->fone_store_site) ? $Store->fone_store_site : $Store->fone1)}}"><span class="phone-mask">{{(($Store->fone_store_site) ? $Store->fone_store_site : $Store->fone1)}}</span></a></p>
@@ -134,9 +134,9 @@
             <div class="row">
                 <div class="cpy__right--left">
                     <ul class="social__icon">
-                        <li><a target="_blank" title="Facebook" href="https://www.facebook.com/Ilpasticcinocaffe"><i class="fa fa-facebook"></i></a></li>
-                        <li><a target="_blank" title="Instagram" href="https://www.instagram.com/ilpasticcinocaffe"><i class="fa fa-instagram"></i></a></li>
-                        <li><a target="_blank" title="WhatsApp" href="https://api.whatsapp.com/send?l=pt_br&phone=55{{(($Store->fone_store_site) ? $Store->fone_store_site : $Store->fone1)}}"><i class="fa fa-whatsapp"></i></a></li>
+                        <li><a target="_blank" title="Facebook" href="https://www.facebook.com/Ilpasticcinocaffe"><i class="fab fa-facebook-f"></i></a></li>
+                        <li><a target="_blank" title="Instagram" href="https://www.instagram.com/ilpasticcinocaffe"><i class="fab fa-instagram"></i></a></li>
+                        <li><a target="_blank" title="WhatsApp" href="https://api.whatsapp.com/send?l=pt_br&phone=55{{(($Store->fone_store_site) ? $Store->fone_store_site : $Store->fone1)}}"><i class="fab fa-whatsapp"></i></a></li>
                     </ul>
                 </div>
             </div>

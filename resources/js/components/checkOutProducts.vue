@@ -286,8 +286,8 @@ export default {
                         money_change: this.changeOfMoney
                     }).then(response => {
                         if(response.data.success === true){
-                            alert(response.data.message);
-                            window.location.href= ''+this.appurlNew+'/';
+                            //alert(response.data.message);
+                            window.location.href= ''+this.appurlNew+'/pedidos';
                         } else {
                             alert(response.data.message);
                         }
@@ -299,8 +299,8 @@ export default {
                         type_payment : this.selectedTypePaymentDescription
                     }).then(response => {
                         if(response.data.success === true){
-                            alert(response.data.message);
-                            window.location.href= ''+this.appurlNew+'/';
+                            //alert(response.data.message);
+                            window.location.href= ''+this.appurlNew+'/pedidos';
                         } else {
                             //alert(response.data.message);
                             console.log(response.data.message);

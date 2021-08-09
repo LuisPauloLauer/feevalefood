@@ -21,11 +21,17 @@ use Illuminate\Support\Facades\Session;
 
 class shopCartController extends Controller
 {
+    private $idOfStore = null;
+
+    public function __construct()
+    {
+        $this->idOfStore = env('APP_STORE_ID');
+    }
+
     public function showModalProduct(Request $request)
     {
         $object = $request->product_object;
         $id = $request->product_id;
-        $storeID = $request->store_id;
         $emptyCart = $request->empty_cart;
         $categoryId = null;
         $numArrayCategory = 0;
@@ -36,7 +42,7 @@ class shopCartController extends Controller
 
                 $Kit = mdKits::findOrFail($id);
 
-                if($Kit->store <> $storeID){
+                if($Kit->store <> $this->idOfStore){
 
                     $responseProduct['success']     = false;
                     $responseProduct['message']     = 'Kit não pertence a esta loja!!!';
@@ -154,7 +160,7 @@ class shopCartController extends Controller
 
                 $Product = mdProducts::findOrFail($id);
 
-                if($Product->store <> $storeID){
+                if($Product->store <> $this->idOfStore){
 
                     $responseProduct['success']     = false;
                     $responseProduct['message']     = 'Produto não pertence a esta loja!!!';

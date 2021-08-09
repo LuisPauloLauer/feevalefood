@@ -26,6 +26,7 @@ Route::post('/carrinho/adicionar-item','site\shopCartController@addToCart')->nam
 Route::post('/carrinho/editar-item','site\shopCartController@editQntyItemToCart')->name('cart.edit.item');
 Route::post('/carrinho/deletar-item','site\shopCartController@deleteItemToCart')->name('cart.delete.item');
 
+Route::get('/pedidos','site\UserSiteDemandController@viewAllDemandsByUser')->name('demands.view');
 ////----------  Check-Out ------------////
 Route::get('/pedido/finalizar','site\shopCartController@checkOutCart')->name('cart.checkout');
 
@@ -36,6 +37,9 @@ Route::post('/pedido/criar-pedido','site\shopCartController@createDemand')->name
 Route::get('/paypal/pagar','site\paypalPaymentController@create')->name('paypal.pay');
 Route::get('/paypal/execute-payment','site\paypalPaymentController@payPalStatus')->name('paypal.execute');
 Route::get('/paypal/cancel','site\paypalPaymentController@payPalStatus')->name('cancel');
+
+Route::get('usuario/politica-privacidade','site\UsersSiteController@userPolicy')->name('usersite.policy');
+Route::get('usuario/termos','site\UsersSiteController@userTerms')->name('usersite.terms');
 
 ////----------- Users Site -----------////
 Route::get('usuario/login','site\UsersSiteController@loginUserSite')->name('usersite.login');

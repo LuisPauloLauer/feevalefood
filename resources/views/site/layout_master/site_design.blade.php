@@ -28,6 +28,7 @@
     <script src="{{ asset('site/node_modules/js/modernizr-3.5.0.min.js') }}"></script>
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{ asset('admin/adminLTE/plugins/fontawesome-free/css/all.min.css') }}">
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
 
@@ -48,7 +49,9 @@
         @yield('content')
 
         @if(Route::current()->getName() !== 'cart.checkout')
-            @include('site.layout_master.site_footer')
+            @if(Route::current()->getName() !== 'demands.view')
+                @include('site.layout_master.site_footer')
+            @endif
 
             @include('site.user.user')
 

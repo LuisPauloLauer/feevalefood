@@ -18,3 +18,4 @@ Vue.config.productionTip = false;
 
 Vue.component('div-cart-product', require('./components/cartProducts.vue').default);
 Vue.component('div-checkout-product', require('./components/checkOutProducts.vue').default);
+Vue.component('div-demands', require('./components/demands.vue').default);

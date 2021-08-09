@@ -179,7 +179,8 @@ class paypalPaymentController extends Controller
                         //$responseDemand['message'] = 'Pedido Nº: '.$DemandFoodStatus['id_demand'].' inserido com sucesso.';
                         //echo json_encode($responseDemand);
                         //return;
-                        return redirect('/')->with('messageCheckOut', 'Pedido Nº : ' . strval($DemandFoodStatus['id_demand']) . ' inserido com sucesso.');
+                        //return redirect('/')->with('messageCheckOut', 'Pedido Nº : ' . strval($DemandFoodStatus['id_demand']) . ' inserido com sucesso.');
+                        return redirect()->route('demands.view');
                     } else {
                         $responseDemand['success'] = false;
                         if(!is_null($DemandFoodStatus['msg_erro_text'])){

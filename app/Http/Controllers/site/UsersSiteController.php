@@ -381,4 +381,14 @@ class UsersSiteController extends Controller
 
         return redirect()->route('home.index');
     }
+
+    public function userPolicy()
+    {
+        return view('site.user.policy');
+    }
+
+    public function userTerms()
+    {
+        return view('site.user.terms');
+    }
 }

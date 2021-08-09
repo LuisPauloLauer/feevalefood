@@ -12,11 +12,18 @@ use Illuminate\Support\Facades\Config;
 
 class indexController extends Controller
 {
+    private $idOfStore = null;
+
+    public function __construct()
+    {
+        $this->idOfStore = env('APP_STORE_ID');
+    }
+
     public function index()
     {
         $pathImagens = FilesControl::getPathImages();
 
-        $Store = mdStores::where('id', 2)->first();
+        $Store = mdStores::where('id', $this->idOfStore)->first();
 
         $storeTimes = mdDeliveryStoreTimes::where('store', $Store->id)->where('status', 'S')->orderBy('day', 'asc')->get();
 

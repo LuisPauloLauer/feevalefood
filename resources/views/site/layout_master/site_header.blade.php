@@ -18,18 +18,20 @@
                                 <li class="drop">
                                     <a href="{{ route('home.index') }}">Home</a>
                                 </li>
-                                <li class="drop">
-                                    <a href="#step1">Como funciona</a>
-                                </li>
-                                <li class="drop">
-                                    <a href="#step2">Cardápio</a>
-                                </li>
-                                <li class="drop">
-                                    <a target="_blank" href="https://www.ilpasticcinocaffe.com/">Blog</a>
-                                </li>
-                                <li class="drop">
-                                    <a href="#contato">Contato</a>
-                                </li>
+                                @if(Route::current()->getName() !== 'demands.view')
+                                    <li class="drop">
+                                        <a href="#step1">Como funciona</a>
+                                    </li>
+                                    <li class="drop">
+                                        <a href="#step2">Cardápio</a>
+                                    </li>
+                                    <li class="drop">
+                                        <a target="_blank" href="https://www.ilpasticcinocaffe.com/">Blog</a>
+                                    </li>
+                                    <li class="drop">
+                                        <a href="#contato">Contato</a>
+                                    </li>
+                                @endif
                             </ul>
                         </nav>
 
@@ -39,11 +41,11 @@
                     <div class="header__right d-flex justify-content-end">
                         <div class="log__in">
                             @if(Route::current()->getName() === 'usersite.create')
-                                <i class="fa text-danger fa-user-plus" style="font-size: 28px"></i>
+                                <i class="fa text-danger fa-user-plus"></i>
                             @else
                                 @if( Session::has('userSiteLogged') )
                                     <a class="nav-link floating-box__button responsive-header__button" data-toggle="dropdown" href="#">
-                                        <i class="fa text-danger fa-user" style="font-size: 28px"></i>
+                                        <i class="fa text-danger fa-user"></i>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                                         <div class="dropdown-item">
@@ -52,6 +54,12 @@
                                             </div>
                                         </div>
                                         <div class="dropdown-divider"></div>
+                                        <a href="{{ route('demands.view') }}" class="dropdown-item">
+                                            <div class="media">
+                                                <i class="fa fa-clipboard" style="margin: 0 15px 0 0"></i>
+                                                <h2 class="dropdown-item-title">Pedidos</h2>
+                                            </div>
+                                        </a>
                                         <a href="{{ route('usersite.logout') }}" class="dropdown-item">
                                             <div class="media">
                                                 <i class="fa fa-arrow-circle-left" style="margin: 0 15px 0 0"></i>
@@ -65,7 +73,7 @@
                             @endif
                         </div>
                         <div class="shopping__cart">
-                            <a class="minicart-trigger" href="#"><i class="fa fa-3x fa-shopping-basket"></i></a>
+                            <a class="minicart-trigger" href="#"><i class="fa fa-2x fa-shopping-basket"></i></a>
                             <div class="shop__qun">
                                 @if( Session::has('shopCartKit') || Session::has('shopCartProduct') )
                                     @if( Session::has('shopCartKit') && Session::has('shopCartProduct') )
