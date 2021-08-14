@@ -22,6 +22,7 @@
                                         <span v-if="demandItens.kit_price">R$&nbsp;{{ formatPrice(demandItens.kit_price * demandItens.amount) }}</span>
                                         <span v-else>R$&nbsp;{{ formatPrice(demandItens.product_price * demandItens.amount) }}</span>
                                     </div>
+                                    <p v-if="demandItens.observation">comentário: {{demandItens.observation}}</p>
                                 </li>
                             </ul>
                             <div class="order-details-cart__footer">
@@ -115,21 +116,14 @@ export default {
             return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
         },
         showModalDemand(pDemand){
-            //this.demandFilter = this.listdemandNew;
-            //this.demandItensFilter = this.listdemanditensNew;
             this.demandFilter = Object.values(this.listdemand).filter(demandFiltered => demandFiltered.demand === pDemand);
             this.demandItensFilter = Object.values(this.listdemanditens).filter(itemFiltered => itemFiltered.demand === pDemand);
-
-            console.log(this.demandFilter);
-            console.log(this.demandItensFilter);
-
             $('#idModalDemand').modal('show');
 
         }
     },
     mounted() {
-        //console.log(this.listdemandNew);
-        //console.log(this.listdemanditensNew);
+
     }
 }
 

@@ -2532,6 +2532,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['listdemand', 'listdemanditens', 'appurl'],
   data: function data() {
@@ -2550,22 +2551,16 @@ __webpack_require__.r(__webpack_exports__);
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     },
     showModalDemand: function showModalDemand(pDemand) {
-      //this.demandFilter = this.listdemandNew;
-      //this.demandItensFilter = this.listdemanditensNew;
       this.demandFilter = Object.values(this.listdemand).filter(function (demandFiltered) {
         return demandFiltered.demand === pDemand;
       });
       this.demandItensFilter = Object.values(this.listdemanditens).filter(function (itemFiltered) {
         return itemFiltered.demand === pDemand;
       });
-      console.log(this.demandFilter);
-      console.log(this.demandItensFilter);
       $('#idModalDemand').modal('show');
     }
   },
-  mounted: function mounted() {//console.log(this.listdemandNew);
-    //console.log(this.listdemanditensNew);
-  }
+  mounted: function mounted() {}
 });
 
 /***/ }),
@@ -7012,7 +7007,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.payment-cash-modal__input-container {\n    font-size: 1.375rem;\n    color: #a6a5a5;\n    font-weight: bold;\n    display: flex;\n    align-items: baseline;\n    justify-content: center;\n}\n", ""]);
+exports.push([module.i, "\n.payment-cash-modal__input-container {\n    font-size: 1.375rem;\n    color: #a6a5a5;\n    font-weight: bold;\n    display: flex;\n    align-items: baseline;\n    justify-content: center;\n}\n.modal-change-money-header, .modal-change-money-price-header{\n    border-bottom: 0;\n}\n.modal-change-money-footer, .modal-change-money-price-footer{\n    border-top: 0;\n}\n", ""]);
 
 // exports
 
@@ -39131,28 +39126,35 @@ var render = function() {
                 _vm._v(" "),
                 _vm._m(0),
                 _vm._v(" "),
-                _c("div", { staticClass: "modal-footer" }, [
-                  _c("div", { staticClass: "container text-center" }, [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-danger",
-                        attrs: { type: "button", "data-dismiss": "modal" }
-                      },
-                      [_vm._v("Não")]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-danger",
-                        attrs: { type: "button", id: "idModalChangeMoneyYes" },
-                        on: { click: _vm.showModalChangeOfMoneyPrice }
-                      },
-                      [_vm._v("Sim\n                        ")]
-                    )
-                  ])
-                ])
+                _c(
+                  "div",
+                  { staticClass: "modal-footer modal-change-money-footer" },
+                  [
+                    _c("div", { staticClass: "container text-center" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-danger",
+                          attrs: { type: "button", "data-dismiss": "modal" }
+                        },
+                        [_vm._v("Não")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-danger",
+                          attrs: {
+                            type: "button",
+                            id: "idModalChangeMoneyYes"
+                          },
+                          on: { click: _vm.showModalChangeOfMoneyPrice }
+                        },
+                        [_vm._v("Sim\n                        ")]
+                      )
+                    ])
+                  ]
+                )
               ]
             )
           ]
@@ -39190,7 +39192,7 @@ var render = function() {
                 _vm._v(" "),
                 _c(
                   "div",
-                  { staticClass: "modal-body modal-change-money-body" },
+                  { staticClass: "modal-body modal-change-money-price-body" },
                   [
                     _c("p", { staticClass: "text-center" }, [
                       _vm._v(
@@ -39238,25 +39240,31 @@ var render = function() {
                   ]
                 ),
                 _vm._v(" "),
-                _c("div", { staticClass: "modal-footer" }, [
-                  _c("div", { staticClass: "container text-center" }, [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "container btn btn-danger",
-                        attrs: {
-                          disabled:
-                            parseFloat(_vm.changeOfMoneyPrice) <=
-                            parseFloat(_vm.listproductNew.totalPrice),
-                          type: "button",
-                          id: "idModalChangeMoneyConfirm"
+                _c(
+                  "div",
+                  {
+                    staticClass: "modal-footer modal-change-money-price-footer"
+                  },
+                  [
+                    _c("div", { staticClass: "container text-center" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "container btn btn-danger",
+                          attrs: {
+                            disabled:
+                              parseFloat(_vm.changeOfMoneyPrice) <=
+                              parseFloat(_vm.listproductNew.totalPrice),
+                            type: "button",
+                            id: "idModalChangeMoneyConfirm"
+                          },
+                          on: { click: _vm.confirmOfMoneyPrice }
                         },
-                        on: { click: _vm.confirmOfMoneyPrice }
-                      },
-                      [_vm._v("Confirmar\n                        ")]
-                    )
-                  ])
-                ])
+                        [_vm._v("Confirmar\n                        ")]
+                      )
+                    ])
+                  ]
+                )
               ]
             )
           ]
@@ -39805,7 +39813,16 @@ var render = function() {
                                       )
                                     ])
                               ]
-                            )
+                            ),
+                            _vm._v(" "),
+                            demandItens.observation
+                              ? _c("p", [
+                                  _vm._v(
+                                    "comentário: " +
+                                      _vm._s(demandItens.observation)
+                                  )
+                                ])
+                              : _vm._e()
                           ]
                         )
                       }),

@@ -12,7 +12,7 @@
                     <div class="modal-body modal-change-money-body">
                         <h5 align="center" style="margin:0;">Você vai precisar de troco?</h5>
                     </div>
-                    <div class="modal-footer">
+                    <div class="modal-footer modal-change-money-footer">
                         <div class="container text-center">
                             <button type="button" class="btn btn-danger" data-dismiss="modal">Não</button>
                             <button type="button" class="btn btn-danger" id="idModalChangeMoneyYes"
@@ -33,7 +33,7 @@
                             <h4 class="modal-title" align="center">Troco pra quanto?</h4>
                         </div>
                     </div>
-                    <div class="modal-body modal-change-money-body">
+                    <div class="modal-body modal-change-money-price-body">
                         <p class="text-center">O total do seu pedido é de R$ {{ listproductNew.totalPrice }}</p>
                         <p class="text-center">Digite quanto vai pagar em dinheiro para o seu troco.</p>
                         <div class="payment-cash-modal__input-container">
@@ -42,7 +42,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
+                    <div class="modal-footer modal-change-money-price-footer">
                         <div class="container text-center">
                             <button
                                 :disabled="(parseFloat(changeOfMoneyPrice) <=  parseFloat(listproductNew.totalPrice))" type="button" class="container btn btn-danger" id="idModalChangeMoneyConfirm" @click="confirmOfMoneyPrice">Confirmar
@@ -319,12 +319,18 @@ export default {
 
 </script>
 <style>
-.payment-cash-modal__input-container {
-    font-size: 1.375rem;
-    color: #a6a5a5;
-    font-weight: bold;
-    display: flex;
-    align-items: baseline;
-    justify-content: center;
-}
+    .payment-cash-modal__input-container {
+        font-size: 1.375rem;
+        color: #a6a5a5;
+        font-weight: bold;
+        display: flex;
+        align-items: baseline;
+        justify-content: center;
+    }
+    .modal-change-money-header, .modal-change-money-price-header{
+        border-bottom: 0;
+    }
+    .modal-change-money-footer, .modal-change-money-price-footer{
+        border-top: 0;
+    }
 </style>
