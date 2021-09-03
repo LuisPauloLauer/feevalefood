@@ -253,41 +253,21 @@ export default {
             if (this.selectedTypePaymentName !== null) {
                 if (this.selectedTypePaymentName == 'paypal') {
                     window.location.href = this.appurlNew + '/paypal/pagar';
-                    /*axios.post(
-                        this.appurlNew+'/paypal/pagar'
-                    ).then(response => {
-                        if(response.data.success === true){
-                            alert(response.data.message);
-                            document.location.reload(true);
-                        } else {
-                            alert(response.data.message);
-                        }
-                    }).catch(error => {
-                        alert('Erro ao fazer o pedido!!!');
-                    });*/
-                    /*$.ajax({
-                        url: window.location.href = this.appurlNew + '/paypal/pagar',
-                        type: "post",
-                        data: $(this).serialize(),
-                        dataType: "json",
-                        success: function (response) {
-                            if(response.success === true){
-                                alert(response.data.message);
-                                document.location.reload(true);
-                            }else{
-                                alert(response.data.message);
-                            }
-                            console.log(response);
-                        }
-                    });*/
                 } else if (this.selectedTypePaymentName == 'dinheiro') {
                     axios.post( this.appurlNew+'/pedido/criar-pedido', {
                         type_payment : this.selectedTypePaymentDescription,
                         money_change: this.changeOfMoney
                     }).then(response => {
                         if(response.data.success === true){
-                            //alert(response.data.message);
-                            window.location.href= ''+this.appurlNew+'/pedidos';
+                            axios.get( this.appurlNew+'/send-message/whatsapp/'+response.data.idDemand).then(response => {
+                                if(response.data.success === true){
+                                    window.location.href= ''+this.appurlNew+'/pedidos';
+                                } else {
+                                    alert(response.data.message);
+                                }
+                            }).catch(error => {
+                                alert('Erro ao mandar mensagem!!!');
+                            });
                         } else {
                             alert(response.data.message);
                         }
@@ -299,8 +279,15 @@ export default {
                         type_payment : this.selectedTypePaymentDescription
                     }).then(response => {
                         if(response.data.success === true){
-                            //alert(response.data.message);
-                            window.location.href= ''+this.appurlNew+'/pedidos';
+                            axios.get( this.appurlNew+'/send-message/whatsapp/'+response.data.idDemand).then(response => {
+                                if(response.data.success === true){
+                                    window.location.href= ''+this.appurlNew+'/pedidos';
+                                } else {
+                                    alert(response.data.message);
+                                }
+                            }).catch(error => {
+                                alert('Erro ao mandar mensagem!!!');
+                            });
                         } else {
                             //alert(response.data.message);
                             console.log(response.data.message);

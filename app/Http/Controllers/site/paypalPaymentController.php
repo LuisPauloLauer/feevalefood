@@ -22,18 +22,6 @@ class paypalPaymentController extends Controller
     // Delivery vars
     private $deliveryType           = null;
 
-    /*
-    public function __construct()
-    {
-
-    }
-
-    public function __destruct()
-    {
-
-    }
-    */
-
     public function create(Request $request)
     {
         if(Session::has('userSiteLogged')){
@@ -175,12 +163,10 @@ class paypalPaymentController extends Controller
                         $request->session()->forget('shopCartKit');
                         $request->session()->forget('shopCartProduct');
 
-                        //$responseDemand['success'] = $DemandFoodStatus['msg_erro_status'];
-                        //$responseDemand['message'] = 'Pedido Nº: '.$DemandFoodStatus['id_demand'].' inserido com sucesso.';
-                        //echo json_encode($responseDemand);
-                        //return;
-                        //return redirect('/')->with('messageCheckOut', 'Pedido Nº : ' . strval($DemandFoodStatus['id_demand']) . ' inserido com sucesso.');
-                        return redirect()->route('demands.view');
+                        return redirect()->route('message.whatsapp.demand', ['demand' => $DemandFoodStatus['id_demand']]);
+
+                        //return redirect()->route('demands.view');
+
                     } else {
                         $responseDemand['success'] = false;
                         if(!is_null($DemandFoodStatus['msg_erro_text'])){

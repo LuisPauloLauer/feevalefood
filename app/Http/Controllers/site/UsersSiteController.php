@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\site;
 
 use App\Http\Controllers\Controller;
+use App\Library\GeneralLibrary;
 use App\UserSite;
 use App\mdSocialAccount;
 use App\mdUniversitybuildings;
@@ -13,6 +14,18 @@ use Laravel\Socialite\Facades\Socialite;
 
 class UsersSiteController extends Controller
 {
+
+    private $generalLibrary;
+
+    public function __construct()
+    {
+        $this->generalLibrary = new GeneralLibrary();
+    }
+
+    function __destruct() {
+        unset($this->generalLibrary);
+    }
+
     public function loginUserSite(Request $request)
     {
         if(!Session::has('returnurlcallback')){
@@ -201,66 +214,6 @@ class UsersSiteController extends Controller
 
     public function storeUserSite(Request $request)
     {
-        //Faz adicao do nono digito
-        function numeroAjuste($numero)
-        {
-            //Se numero tem 11 digitos nao faz nada
-            if (strlen($numero) == 11)
-                return $numero;
-
-            //se numero tem 10 digitos verifica
-            if (strlen($numero) == 10) {
-
-                //Pega ddd e numero
-                $ddd = substr($numero, 0, 2);
-                $num = str_replace($ddd, '', $numero);
-
-                //Verifica se é celular, se nao for retorno o proprio numero
-                if ($num[0] == 2 || $num[0] == 3) {
-                    return $numero;
-                }
-
-                //se for celular, so tem 8 numeros, adiciona o 9
-                if (strlen($num) == 8) {
-                    $num = "9{$num}";
-                }
-
-                return "{$ddd}{$num}";
-            }
-        }
-
-        //Limpa o numero removendo caracteres
-        function numeroSanitize($numero)
-        {
-            return preg_replace('/[^0-9]/', '', $numero);
-        }
-
-        function numeroNonoDigito($numero)
-        {
-            if (empty($numero))
-                return '';
-
-            $numero_ = numeroSanitize($numero);
-            $numero_ = numeroAjuste($numero_);
-
-            return $numero_;
-        }
-
-        function validatePhoneNumber($phoneNumber)
-        {
-            $phoneNumber = trim(str_replace('/', '', str_replace(' ', '', str_replace('-', '', str_replace(')', '', str_replace('(', '', $phoneNumber))))));
-
-            //$regexTelefone = "^[0-9]{11}$";
-
-            // $regexCel = '/[0-9]{2}[6789][0-9]{3,4}[0-9]{4}/'; // Regex para validar somente celular
-            $regexPhone = '/^(?:(?:\+|00)?(55)\s?)?(?:\(?([1-9][0-9])\)?\s?)?(?:((?:9\d|[2-9])\d{3})\-?(\d{4}))$/'; // Regex para validar somente celular
-            if (preg_match($regexPhone, $phoneNumber)) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-
         $userSiteData = $request->session()->get('userSiteData');
         $name = $request->name;
         $fone = $request->fone;
@@ -297,7 +250,7 @@ class UsersSiteController extends Controller
                 echo json_encode($login);
                 return;
             }
-            if(!validatePhoneNumber($fone)){
+            if(!$this->generalLibrary->validatePhoneNumber($fone)){
                 $login['success'] = false;
                 $login['message'] = 'Número de telefone inválido!';
                 echo json_encode($login);
@@ -305,7 +258,7 @@ class UsersSiteController extends Controller
             }
         }
 
-        $fone = numeroNonoDigito($fone);
+        $fone = $this->generalLibrary->adjustDigitNumberNine($fone);
 
         if(is_null($building)){
             $login['success'] = false;

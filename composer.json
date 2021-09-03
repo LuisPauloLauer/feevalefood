@@ -1,20 +1,12 @@
 {
-    "name": "LuisPauloLauer/delivery_feevale",
+    "name": "laravel/laravel",
     "type": "project",
-    "description": "Projeto de delivery para padaria Il Pasticcinio para clientes da feevale",
-    "minimum-stability": "stable",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Luís Paulo G. Lauer",
-            "email": "lauer.luispaulo@gmail.com",
-            "role": "Developer"
-        }
-    ],
+    "description": "The Laravel Framework.",
     "keywords": [
         "framework",
         "laravel"
     ],
+    "license": "MIT",
     "require": {
         "php": "^7.2.5",
         "fideloper/proxy": "^4.2",
@@ -27,7 +19,8 @@
         "laravel/tinker": "^2.0",
         "laravel/ui": "^2.1",
         "mpdf/mpdf": "^8.0",
-        "paypal/rest-api-sdk-php": "^1.14"
+        "paypal/rest-api-sdk-php": "^1.14",
+        "twilio/sdk": "^6.28"
     },
     "require-dev": {
         "facade/ignition": "^2.0",
@@ -60,6 +53,7 @@
             "Tests\\": "tests/"
         }
     },
+    "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
         "post-autoload-dump": [

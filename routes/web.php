@@ -26,13 +26,17 @@ Route::post('/carrinho/adicionar-item','site\shopCartController@addToCart')->nam
 Route::post('/carrinho/editar-item','site\shopCartController@editQntyItemToCart')->name('cart.edit.item');
 Route::post('/carrinho/deletar-item','site\shopCartController@deleteItemToCart')->name('cart.delete.item');
 
+////----------  Demands ------------////
 Route::get('/pedidos','site\UserSiteDemandController@viewAllDemandsByUser')->name('demands.view');
 ////----------  Check-Out ------------////
 Route::get('/pedido/finalizar','site\shopCartController@checkOutCart')->name('cart.checkout');
+////---------- notifications ------------////
+Route::get('/send-message/whatsapp/{demand}','site\notificationController@sendMessageWhatsApp')->name('message.whatsapp');
+Route::get('/send-message/whatsapp-demand/{demand}','site\notificationController@sendMessageWhatsAppDemand')->name('message.whatsapp.demand');
 
 ////----------- Payments -----------////
 ////----------- Payment on Delivery -----------////
-Route::post('/pedido/criar-pedido','site\shopCartController@createDemand')->name('demand.create');
+Route::post('/pedido/criar-pedido','site\UserSiteDemandController@createDemand')->name('demand.create');
 ////----------- PayPal -----------////
 Route::get('/paypal/pagar','site\paypalPaymentController@create')->name('paypal.pay');
 Route::get('/paypal/execute-payment','site\paypalPaymentController@payPalStatus')->name('paypal.execute');
@@ -68,5 +72,4 @@ Route::post('usuario/salvar','site\UsersSiteController@storeUserSite')->name('us
 
 //Route::match(['get', 'post'], '/{segment}/{category}', 'site\pageSegmentsController@showStoresBySegmentByCategory')->name('segment.category.page');
 //Route::get('/home', 'HomeController@index')->name('home');
-
 
