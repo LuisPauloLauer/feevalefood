@@ -4,7 +4,7 @@
     <!-- Modal AddProduct -->
     <div class="modal fade" id="modal-product-view" tabindex="-1" role="dialog" aria-labelledby="modalProductView"
          aria-hidden="true">
-        <div class="modal-product-view modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-product-view modal-dialog modal-dialog-centered modal-lg modal-fullscreen-md-down" role="document">
             <div class="modal-content modal-product-view-content">
                 <div class="modal-header modal-product-view-header">
                     <div class="container text-center">
@@ -112,7 +112,7 @@
     <!-- End Slider1 Area -->
 
     <!-- Start Service Area -->
-    <section id="step1" class="fd__service__area bg-image--2 section-padding--sm">
+    <section id="como-funciona" class="fd__service__area bg-image--2 section-padding--sm">
         <div class="container">
             <div class="service__wrapper bg--white">
                 <div class="row">
@@ -131,7 +131,7 @@
                                 <div class="ser__icon">
                                     <img src="{{ url('site/images/icon/color-icon/1.png') }}" alt="icon image">
                                 </div>
-                                <h2><a href="#step2">Veja o cardápio</a></h2>
+                                <h2><a href="#cardapio" class="link__ancor__step">Veja o cardápio</a></h2>
                             </div>
                             <div class="service__details">
                                 <p>Selecione as variedades do cardápio e adicione no carrinho de compras.</p>
@@ -176,7 +176,7 @@
     <!-- End Service Area -->
 
     <!-- Start Special Menu -->
-    <section id="step2" class="fd__special__menu__area bg-white section-padding--sm">
+    <section id="cardapio" class="fd__special__menu__area bg-white section-padding--sm">
         <div class="container">
             <div class="row">
                 <div class="col-md-12 col-lg-12">
@@ -568,326 +568,330 @@
 @section('javascript')
     <script src="{{ asset('site/node_modules/js/plugin-jqtarea.js') }}"></script>
     <script>
-        var modalProductObject = null;
-        var modalProductId = null;
-        var modalProductQnty = 0;
-        var modalProductPrice = 0;
-        var modalProductTotalPrice = 0;
-        var modalCategoryTotal = 0;
-        var modalSellProducts = [];
+        $(document).ready(function() {
+            let modalProductObject = null;
+            let modalProductId = null;
+            let modalProductQnty = 0;
+            let modalProductPrice = 0;
+            let modalProductTotalPrice = 0;
+            let modalCategoryTotal = 0;
+            let modalSellProducts = [];
 
-        function formatPrice(itemPriceValue) {
-            let val = (itemPriceValue / 1).toFixed(2).replace('.', ',');
-            return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-        };
+            function formatPrice(itemPriceValue) {
+                let val = (itemPriceValue / 1).toFixed(2).replace('.', ',');
+                return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            };
 
-        $("#modal-product-obs-txt").jQTArea({
-            setLimit: 150,
-            setExt: "W",
-            setExtR: true
-        });
-
-        $(document).on("click", ".cart-kit-prod-item", function (event) {
-
-            var div = $("div#modal-product-content-list");
-            var radiosBtns = div.find("input[type='radio']");
-            var numbRadiosChecked = 0;
-            modalSellProducts = [];
-
-            // Get all the radios
-            for (var i = 0; i < radiosBtns.length; i++) {
-
-                var radio = $(radiosBtns[i]);
-
-                // If this isn't checked, skip it
-                if (radio.is(':checked') === true) {
-                    modalSellProducts.push(radio.val());
-                    numbRadiosChecked++;
-                    $('#itensSelectedbykit').empty();
-                    $('#itensSelectedbykit').text(numbRadiosChecked + '/' + modalCategoryTotal);
-                }
-            }
-
-            if (numbRadiosChecked == modalCategoryTotal) {
-               // console.log(modalSellProducts);
-               // console.log('Obs: ' + $('#idobservationtxt').val());
-                $('#btn-model-add-car').prop("disabled", false);
-            }
-
-        });
-
-        $(document).on("click", "#btn-model-add-car-qnty", function (event) {
-
-            var ProductTotalPrice = 0;
-
-            if (modalProductQnty >= 1) {
-                modalProductTotalPrice = parseFloat(modalProductTotalPrice);
-                modalProductPrice = parseFloat(modalProductPrice);
-                modalProductQnty++;
-                modalProductTotalPrice += modalProductPrice;
-
-                ProductTotalPrice = modalProductTotalPrice.toFixed(2);
-
-
-                //$('#btn-model-add-car').empty();
-                //$('#btn-model-add-car').text('Adicionar R$ ');
-                //$('#btn-model-add-car').append('<median>' + ProductTotalPrice + '<median>');
-                $('#btn-model-add-car-price').empty();
-                $('#btn-model-add-car-price').text('R$ '+formatPrice(ProductTotalPrice));
-                $('#qntyProdCart').empty();
-                $('#qntyProdCart').text(modalProductQnty);
-
-                $('#btn-model-minus-car-qnty').prop("disabled", false);
-            }
-
-        });
-
-        $(document).on("click", "#btn-model-minus-car-qnty", function (event) {
-
-            var ProductTotalPrice = 0;
-
-            if (modalProductQnty > 1) {
-                modalProductTotalPrice = parseFloat(modalProductTotalPrice);
-                modalProductPrice = parseFloat(modalProductPrice);
-                modalProductQnty = (modalProductQnty - 1);
-                modalProductTotalPrice = (modalProductTotalPrice - modalProductPrice);
-
-                ProductTotalPrice = modalProductTotalPrice.toFixed(2);
-
-                //$('#btn-model-add-car').empty();
-                //$('#btn-model-add-car').text('Adicionar R$ ');
-                //$('#btn-model-add-car').append('<median>' + ProductTotalPrice + '<median>');
-                $('#btn-model-add-car-price').empty();
-                $('#btn-model-add-car-price').text('R$ '+formatPrice(ProductTotalPrice));
-                $('#qntyProdCart').empty();
-                $('#qntyProdCart').text(modalProductQnty);
-
-                if (modalProductQnty == 1) {
-                    $('#btn-model-minus-car-qnty').prop("disabled", true);
-                }
-
-            }
-
-        });
-
-        $(document).on("click", "#btn-model-add-car", function (event) {
-
-            event.preventDefault();
-
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: "{{ route('cart.add.item') }} ",
-                type: "post",
-                data: {
-                    product_object: modalProductObject,
-                    product_id: modalProductId,
-                    product_qnty: $('#qntyProdCart').text(),
-                    product_observation: $('#modal-product-obs-txt').val(),
-                    products_sell: modalSellProducts
-                },
-                dataType: "json",
-                success: function (data) {
-                    if (data.success === true) {
-
-                        //location.reload(true);
-                        //window.location.reload();
-                        document.location.reload(true);
-
-                    } else {
-                        alert(data.success);
-                    }
-
-                //    console.log(data);
-                }
+            $("#modal-product-obs-txt").jQTArea({
+                setLimit: 150,
+                setExt: "W",
+                setExtR: true
             });
 
-        });
+            $(document).on("click", ".cart-kit-prod-item", function (event) {
 
-        function showAddProductModal(dataProduct) {
+                var div = $("div#modal-product-content-list");
+                var radiosBtns = div.find("input[type='radio']");
+                var numbRadiosChecked = 0;
+                modalSellProducts = [];
 
-            $('#scrollUp').css('display','none');
+                // Get all the radios
+                for (var i = 0; i < radiosBtns.length; i++) {
 
-            if (dataProduct.object == 'kit') {
-                modalCategoryTotal = dataProduct.products_category.length;
-            }
+                    var radio = $(radiosBtns[i]);
 
-            var modalCategoryProduct = null;
-            modalProductObject = null;
-            modalProductId = null;
-            modalProductQnty = 0;
-            modalProductPrice = 0;
-            modalProductTotalPrice = 0;
-
-            if (dataProduct.imagens[0]) {
-                if (dataProduct.object == 'kit') {
-                    var firstImage = '{{ $pathImagens }}/kits/store_id_{{ $Store->id }}/' + dataProduct.id + '/medium/' + dataProduct.imagens[0]['path_image'];
-                } else if (dataProduct.object == 'product') {
-                    var firstImage = '{{ $pathImagens }}/products/store_id_{{ $Store->id }}/' + dataProduct.id + '/medium/' + dataProduct.imagens[0]['path_image'];
+                    // If this isn't checked, skip it
+                    if (radio.is(':checked') === true) {
+                        modalSellProducts.push(radio.val());
+                        numbRadiosChecked++;
+                        $('#itensSelectedbykit').empty();
+                        $('#itensSelectedbykit').text(numbRadiosChecked + '/' + modalCategoryTotal);
+                    }
                 }
-            } else {
-                var firstImage = '{{ $pathImagens }}/../../files/images/no_photo.png';
-            }
 
-            $('#modal-product-view').modal('show');
+                if (numbRadiosChecked == modalCategoryTotal) {
+                    // console.log(modalSellProducts);
+                    // console.log('Obs: ' + $('#idobservationtxt').val());
+                    $('#btn-model-add-car').prop("disabled", false);
+                }
 
-            modalProductObject = dataProduct.object;
-            modalProductId = dataProduct.id;
-            modalProductQnty = 1;
+            });
 
-            if (dataProduct.unit_promotion_price > 0) {
-                modalProductPrice = dataProduct.unit_promotion_price;
-                modalProductTotalPrice = dataProduct.unit_promotion_price;
-            } else {
-                modalProductPrice = dataProduct.unit_price;
-                modalProductTotalPrice = dataProduct.unit_price;
-            }
+            $(document).on("click", "#btn-model-add-car-qnty", function (event) {
 
-            $('#btn-model-minus-car-qnty').prop("disabled", true);
+                var ProductTotalPrice = 0;
 
-            $('#modal-product-title').text(dataProduct.nameproduct);
-            $('#modal-product-description').text(dataProduct.description);
-            $('#qntyProdCart').text(1);
-            $('#btn-model-add-car-price').empty();
+                if (modalProductQnty >= 1) {
+                    modalProductTotalPrice = parseFloat(modalProductTotalPrice);
+                    modalProductPrice = parseFloat(modalProductPrice);
+                    modalProductQnty++;
+                    modalProductTotalPrice += modalProductPrice;
 
-            if (dataProduct.unit_promotion_price > 0) {
-                $('#btn-model-add-car-price').text('R$ '+formatPrice(dataProduct.unit_promotion_price));
-                $('#modal-product-price-text').text('R$ '+formatPrice(dataProduct.unit_promotion_price));
-            } else {
-                $('#btn-model-add-car-price').text('R$ '+formatPrice(dataProduct.unit_price));
-                $('#modal-product-price-text').text('R$ '+formatPrice(dataProduct.unit_price));
-            }
+                    ProductTotalPrice = modalProductTotalPrice.toFixed(2);
 
-            if (dataProduct.object == 'kit') {
-                $('#btn-model-add-car').prop("disabled", true);
-            } else {
-                $('#btn-model-add-car').prop("disabled", false);
-            }
 
-            $('#modal-product-img').attr("src", firstImage);
+                    //$('#btn-model-add-car').empty();
+                    //$('#btn-model-add-car').text('Adicionar R$ ');
+                    //$('#btn-model-add-car').append('<median>' + ProductTotalPrice + '<median>');
+                    $('#btn-model-add-car-price').empty();
+                    $('#btn-model-add-car-price').text('R$ '+formatPrice(ProductTotalPrice));
+                    $('#qntyProdCart').empty();
+                    $('#qntyProdCart').text(modalProductQnty);
 
-            $('#modal-product-view-img-secunday').empty();
+                    $('#btn-model-minus-car-qnty').prop("disabled", false);
+                }
 
-            $('#modal-product-content-list').empty();
+            });
 
-            if (dataProduct.imagens.length > 1) {
+            $(document).on("click", "#btn-model-minus-car-qnty", function (event) {
 
-                var numbImagens;
+                var ProductTotalPrice = 0;
 
-                for (numbImagens = 0; numbImagens < dataProduct.imagens.length; numbImagens++) {
+                if (modalProductQnty > 1) {
+                    modalProductTotalPrice = parseFloat(modalProductTotalPrice);
+                    modalProductPrice = parseFloat(modalProductPrice);
+                    modalProductQnty = (modalProductQnty - 1);
+                    modalProductTotalPrice = (modalProductTotalPrice - modalProductPrice);
 
-                    if (dataProduct.object == 'kit') {
-                        var imageUrl = '{{ $pathImagens }}/kits/store_id_{{ $Store->id }}/' + dataProduct.id + '/small/' + dataProduct.imagens[numbImagens]['path_image'];
-                    } else if (dataProduct.object == 'product') {
-                        var imageUrl = '{{ $pathImagens }}/products/store_id_{{ $Store->id }}/' + dataProduct.id + '/small/' + dataProduct.imagens[numbImagens]['path_image'];
+                    ProductTotalPrice = modalProductTotalPrice.toFixed(2);
+
+                    //$('#btn-model-add-car').empty();
+                    //$('#btn-model-add-car').text('Adicionar R$ ');
+                    //$('#btn-model-add-car').append('<median>' + ProductTotalPrice + '<median>');
+                    $('#btn-model-add-car-price').empty();
+                    $('#btn-model-add-car-price').text('R$ '+formatPrice(ProductTotalPrice));
+                    $('#qntyProdCart').empty();
+                    $('#qntyProdCart').text(modalProductQnty);
+
+                    if (modalProductQnty == 1) {
+                        $('#btn-model-minus-car-qnty').prop("disabled", true);
                     }
 
-                    $('#modal-product-view-img-secunday').append('<img width="70" height="70" class="img-thumbnail mt--15 mr--8 modal-product-img-index-' + numbImagens + '" src="' + imageUrl + '">');
-
                 }
-            }
 
-            if (dataProduct.object == 'kit') {
-                var numbProducts;
-                var numbCategory;
-                $('#modal-product-content-list').append('<div id="itensSelectedbykit"> 0/' + modalCategoryTotal + ' </div><br>');
-                for (numbProducts = 0; numbProducts < dataProduct.products.length; numbProducts++) {
+            });
 
-                    if (modalCategoryProduct != dataProduct.products[numbProducts]['category_product']) {
-                        for (numbCategory = 0; numbCategory < dataProduct.products_category.length; numbCategory++) {
-                            if (dataProduct.products[numbProducts]['category_product'] == dataProduct.products_category[numbCategory]['products_category_id']) {
-                                $('#modal-product-content-list').append('<strong>' + dataProduct.products_category[numbCategory]['products_category_name'] + ' </strong><br>');
+            $(document).on("click", "#btn-model-add-car", function (event) {
+
+                event.preventDefault();
+
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: "{{ route('cart.add.item') }} ",
+                    type: "post",
+                    data: {
+                        product_object: modalProductObject,
+                        product_id: modalProductId,
+                        product_qnty: $('#qntyProdCart').text(),
+                        product_observation: $('#modal-product-obs-txt').val(),
+                        products_sell: modalSellProducts
+                    },
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.success === true) {
+
+                            //location.reload(true);
+                            //window.location.reload();
+                            document.location.reload(true);
+
+                        } else {
+                            alert(data.success);
+                        }
+
+                        //    console.log(data);
+                    }
+                });
+
+            });
+
+            function showAddProductModal(dataProduct) {
+                $("body").addClass("modal-open");
+                $('#scrollUp').css('display','none');
+
+                if (dataProduct.object == 'kit') {
+                    modalCategoryTotal = dataProduct.products_category.length;
+                }
+
+                var modalCategoryProduct = null;
+                modalProductObject = null;
+                modalProductId = null;
+                modalProductQnty = 0;
+                modalProductPrice = 0;
+                modalProductTotalPrice = 0;
+
+                if (dataProduct.imagens[0]) {
+                    if (dataProduct.object == 'kit') {
+                        var firstImage = '{{ $pathImagens }}/kits/store_id_{{ $Store->id }}/' + dataProduct.id + '/medium/' + dataProduct.imagens[0]['path_image'];
+                    } else if (dataProduct.object == 'product') {
+                        var firstImage = '{{ $pathImagens }}/products/store_id_{{ $Store->id }}/' + dataProduct.id + '/medium/' + dataProduct.imagens[0]['path_image'];
+                    }
+                } else {
+                    var firstImage = '{{ $pathImagens }}/../../files/images/no_photo.png';
+                }
+
+                $('#modal-product-view').modal('show');
+
+                modalProductObject = dataProduct.object;
+                modalProductId = dataProduct.id;
+                modalProductQnty = 1;
+
+                if (dataProduct.unit_promotion_price > 0) {
+                    modalProductPrice = dataProduct.unit_promotion_price;
+                    modalProductTotalPrice = dataProduct.unit_promotion_price;
+                } else {
+                    modalProductPrice = dataProduct.unit_price;
+                    modalProductTotalPrice = dataProduct.unit_price;
+                }
+
+                $('#btn-model-minus-car-qnty').prop("disabled", true);
+
+                $('#modal-product-title').text(dataProduct.nameproduct);
+                $('#modal-product-description').text(dataProduct.description);
+                $('#qntyProdCart').text(1);
+                $('#btn-model-add-car-price').empty();
+
+                if (dataProduct.unit_promotion_price > 0) {
+                    $('#btn-model-add-car-price').text('R$ '+formatPrice(dataProduct.unit_promotion_price));
+                    $('#modal-product-price-text').text('R$ '+formatPrice(dataProduct.unit_promotion_price));
+                } else {
+                    $('#btn-model-add-car-price').text('R$ '+formatPrice(dataProduct.unit_price));
+                    $('#modal-product-price-text').text('R$ '+formatPrice(dataProduct.unit_price));
+                }
+
+                if (dataProduct.object == 'kit') {
+                    $('#btn-model-add-car').prop("disabled", true);
+                } else {
+                    $('#btn-model-add-car').prop("disabled", false);
+                }
+
+                $('#modal-product-img').attr("src", firstImage);
+
+                $('#modal-product-view-img-secunday').empty();
+
+                $('#modal-product-content-list').empty();
+
+                if (dataProduct.imagens.length > 1) {
+
+                    var numbImagens;
+
+                    for (numbImagens = 0; numbImagens < dataProduct.imagens.length; numbImagens++) {
+
+                        if (dataProduct.object == 'kit') {
+                            var imageUrl = '{{ $pathImagens }}/kits/store_id_{{ $Store->id }}/' + dataProduct.id + '/small/' + dataProduct.imagens[numbImagens]['path_image'];
+                        } else if (dataProduct.object == 'product') {
+                            var imageUrl = '{{ $pathImagens }}/products/store_id_{{ $Store->id }}/' + dataProduct.id + '/small/' + dataProduct.imagens[numbImagens]['path_image'];
+                        }
+
+                        $('#modal-product-view-img-secunday').append('<img width="70" height="70" class="img-thumbnail mt--15 mr--8 modal-product-img-index-' + numbImagens + '" src="' + imageUrl + '">');
+
+                    }
+                }
+
+                if (dataProduct.object == 'kit') {
+                    var numbProducts;
+                    var numbCategory;
+                    $('#modal-product-content-list').append('<div id="itensSelectedbykit"> 0/' + modalCategoryTotal + ' </div><br>');
+                    for (numbProducts = 0; numbProducts < dataProduct.products.length; numbProducts++) {
+
+                        if (modalCategoryProduct != dataProduct.products[numbProducts]['category_product']) {
+                            for (numbCategory = 0; numbCategory < dataProduct.products_category.length; numbCategory++) {
+                                if (dataProduct.products[numbProducts]['category_product'] == dataProduct.products_category[numbCategory]['products_category_id']) {
+                                    $('#modal-product-content-list').append('<strong>' + dataProduct.products_category[numbCategory]['products_category_name'] + ' </strong><br>');
+                                }
                             }
                         }
+
+                        $('#modal-product-content-list').append('<input type="radio" class="cart-kit-prod-item" id="cart-kit-prod-' + numbProducts + '" name="cart_kit_prod_' + dataProduct.products[numbProducts]['category_product'] + '" value="' + dataProduct.products[numbProducts]['id'] + '">');
+                        $('#modal-product-content-list').append('<label for="cart-kit-prod-' + numbProducts + '"> ' + dataProduct.products[numbProducts]['name'] + ' </label><br>');
+
+                        modalCategoryProduct = dataProduct.products[numbProducts]['category_product'];
                     }
-
-                    $('#modal-product-content-list').append('<input type="radio" class="cart-kit-prod-item" id="cart-kit-prod-' + numbProducts + '" name="cart_kit_prod_' + dataProduct.products[numbProducts]['category_product'] + '" value="' + dataProduct.products[numbProducts]['id'] + '">');
-                    $('#modal-product-content-list').append('<label for="cart-kit-prod-' + numbProducts + '"> ' + dataProduct.products[numbProducts]['name'] + ' </label><br>');
-
-                    modalCategoryProduct = dataProduct.products[numbProducts]['category_product'];
                 }
             }
-        }
 
-        $(document).on("click", ".view-product-info", function (event) {
+            $(document).on("click", ".view-product-info", function (event) {
 
-            event.preventDefault();
-            var product_object = $(this).data("object");
-            var product_id = $(this).data("prodid");
+                event.preventDefault();
+                var product_object = $(this).data("object");
+                var product_id = $(this).data("prodid");
 
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: "{{ route('product.showmodal') }}",
-                type: "post",
-                data: {
-                    product_object: product_object,
-                    product_id: product_id,
-                    store_id: {{$Store->id}},
-                    empty_cart: null
-                },
-                dataType: "json",
-                success: function (data) {
-                    if (data.success === true) {
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: "{{ route('product.showmodal') }}",
+                    type: "post",
+                    data: {
+                        product_object: product_object,
+                        product_id: product_id,
+                        store_id: {{$Store->id}},
+                        empty_cart: null
+                    },
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.success === true) {
 
-                        showAddProductModal(data);
+                            showAddProductModal(data);
 
-                    } else if (data.message == 'diffstore') {
+                        } else if (data.message == 'diffstore') {
 
-                        $('#diffStoreModal').modal('show');
+                            $('#diffStoreModal').modal('show');
 
-                        $(document).on("click", "#emptyCartModalProduct", function (event) {
+                            $(document).on("click", "#emptyCartModalProduct", function (event) {
 
-                            event.preventDefault();
+                                event.preventDefault();
 
-                            $.ajax({
-                                headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                },
-                                url: "{{ route('product.showmodal') }} ",
-                                type: "post",
-                                data: {
-                                    product_object: product_object,
-                                    product_id: product_id,
-                                    store_id: {{$Store->id}},
-                                    empty_cart: true
-                                },
-                                dataType: "json",
-                                success: function (data) {
-                                    if (data.success === true) {
+                                $.ajax({
+                                    headers: {
+                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                    },
+                                    url: "{{ route('product.showmodal') }} ",
+                                    type: "post",
+                                    data: {
+                                        product_object: product_object,
+                                        product_id: product_id,
+                                        store_id: {{$Store->id}},
+                                        empty_cart: true
+                                    },
+                                    dataType: "json",
+                                    success: function (data) {
+                                        if (data.success === true) {
 
-                                        $('#diffStoreModal').modal('hide');
-                                        showAddProductModal(data);
+                                            $('#diffStoreModal').modal('hide');
+                                            showAddProductModal(data);
 
-                                    } else {
-                                        alert(data.message)
+                                        } else {
+                                            alert(data.message)
+                                        }
+
+                                        //        console.log(data);
+
                                     }
 
-                            //        console.log(data);
-
-                                }
+                                });
 
                             });
 
-                        });
+                        } else {
+                            alert(data.message)
+                        }
 
-                    } else {
-                        alert(data.message)
+                        //    console.log(data);
+
                     }
 
-                //    console.log(data);
-
-                }
+                });
 
             });
 
-        });
+            $('#modal-product-view').on('hidden.bs.modal', function () {
+                $("body").removeClass("modal-open")
+                $('#scrollUp').css('display','block');
 
-        $('#modal-product-view').on('hidden.bs.modal', function () {
-            $('#scrollUp').css('display','block');
-            $('#modal-product-obs-txt').val('');
+                $('#modal-product-obs-txt').val('');
+            });
         });
     </script>
 @endsection

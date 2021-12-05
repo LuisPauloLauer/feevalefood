@@ -6,6 +6,7 @@ use App\CartKit;
 use App\CartProduct;
 use App\Http\Controllers\Controller;
 use App\mdDemandsFood;
+use App\mdStores;
 use App\UserSite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -200,10 +201,11 @@ class UserSiteDemandController extends Controller
 
         $demandByUser = json_encode($demandByUser);
         $demandItensByUser = json_encode($demandItensByUser);
-        $appUrl = json_encode(env('APP_URL'));
+        $Store = mdStores::where('id', $this->idOfStore)->first();
+        $Store = json_encode($Store);
 
         return view('site.user.demands', [
-            'appUrl'            => $appUrl,
+            'Store'             => $Store,
             'listDemand'        => $demandByUser,
             'listDemandItens'   => $demandItensByUser
         ]);

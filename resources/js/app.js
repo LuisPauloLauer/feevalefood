@@ -4,11 +4,15 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
+import Vuelidate from 'vuelidate';
+
 require('./bootstrap');
 
 window.Vue = require('vue');
 
 Vue.config.productionTip = false;
+
+Vue.use(Vuelidate)
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -16,6 +20,12 @@ Vue.config.productionTip = false;
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+Vue.component('div-form-log-user', require('./components/formLoginUserSite.vue').default);
+Vue.component('div-form-reg-user', require('./components/formRegisterUserSite.vue').default);
 Vue.component('div-cart-product', require('./components/cartProducts.vue').default);
 Vue.component('div-checkout-product', require('./components/checkOutProducts.vue').default);
 Vue.component('div-demands', require('./components/demands.vue').default);
+
+const app = new Vue({
+    el: '#app'
+});

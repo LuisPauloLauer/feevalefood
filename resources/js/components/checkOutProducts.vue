@@ -62,7 +62,7 @@
                             <div class="bradcaump__inner text-center">
                                 <h2 class="bradcaump-title">Finalizar pedido</h2>
                                 <nav class="bradcaump-inner">
-                                    <a class="breadcrumb-item" v-bind:href="appurlNew">Home</a>
+                                    <a class="breadcrumb-item" v-bind:href="appUrl">Home</a>
                                     <span class="brd-separetor"><i class="fa fa-long-arrow-right"></i></span>
                                     <span class="breadcrumb-item active">Checkout</span>
                                 </nav>
@@ -108,7 +108,7 @@
                                                                         class="btn btn--default btn--size-m option-button"
                                                                         @click="selectPayment($event,'paypal','PayPal')">
                                                                     <img class="option-button__icon"
-                                                                         v-bind:src="appurlNew+'/site/images/icon/flags-payment/elo.png'"
+                                                                         v-bind:src="appUrl+'/site/images/icon/flags-payment/elo.png'"
                                                                          alt="" crossorigin="anonymous">
                                                                     <div class="option-button__description">
                                                                         <div class="option-button__description-text">
@@ -131,7 +131,7 @@
                                                                             class="btn btn--default btn--size-m option-button"
                                                                             @click="selectPayment($event,liststorepayment.type_payment_name,liststorepayment.type_payment_description)">
                                                                         <img class="option-button__icon"
-                                                                             v-bind:src="appurlNew+'/site/images/icon/flags-payment/'+liststorepayment.type_payment_flag+'.png'"
+                                                                             v-bind:src="appUrl+'/site/images/icon/flags-payment/'+liststorepayment.type_payment_flag+'.png'"
                                                                              alt="" crossorigin="anonymous">
                                                                         <div class="option-button__description">
                                                                             <div
@@ -181,129 +181,122 @@
 </template>
 
 <script>
-import {Money} from 'v-money'
-export default {
-    components: {Money},
-
-    props: ['listproduct', 'liststorepayment', 'appurl'],
-
-    data() {
-        return {
-            listproductNew: this.listproduct,
-            liststorepaymentNew: this.liststorepayment,
-            appurlNew: this.appurl,
-            notSelectedTypePayment: true,
-            selectedTypePaymentName: null,
-            selectedTypePaymentDescription: null,
-            changeOfMoney : 0,
-            changeOfMoneyPrice: 0,
-            changeOfMoneyMoney: {
-                decimal: ',',
-                thousands: '.',
-                prefix: 'R$ ',
-                suffix: '',
-                precision: 2,
-                masked: false
+    import config from '../config';
+    import {Money} from 'v-money';
+    export default {
+        components: {Money},
+        props: ['listproduct', 'liststorepayment'],
+        data() {
+            return {
+                appUrl: config.APP_URL,
+                listproductNew: this.listproduct,
+                liststorepaymentNew: this.liststorepayment,
+                notSelectedTypePayment: true,
+                selectedTypePaymentName: null,
+                selectedTypePaymentDescription: null,
+                changeOfMoney : 0,
+                changeOfMoneyPrice: 0,
+                changeOfMoneyMoney: {
+                    decimal: ',',
+                    thousands: '.',
+                    prefix: 'R$ ',
+                    suffix: '',
+                    precision: 2,
+                    masked: false
+                },
+                csrf: document.head.querySelector('meta[name="csrf-token"]').content
+            }
+        },
+        methods: {
+            formatPrice(value) {
+                let val = (value / 1).toFixed(2).replace('.', ',')
+                return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
             },
-            csrf: document.head.querySelector('meta[name="csrf-token"]').content
-        }
-    },
-    methods: {
-        formatPrice(value) {
-            let val = (value / 1).toFixed(2).replace('.', ',')
-            return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-        },
-        selectPayment(e, typePaymentName, typePaymentDescription) {
-            if (!this.notSelectedTypePayment) {
-                $(".option-button").removeClass("option-button--active");
-                //$(".option-button__check").remove();
-            }
-            let optionButtonPayment = e.currentTarget;
-            optionButtonPayment.classList.add("option-button--active");
-            //let spanCheck = $('<span data-test-id="option-button__check" class="option-button__check"><span class="icon-marmita icon-marmita--check-mark"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14"><path fill-rule="evenodd" d="M2.59 6.57A1 1 0 0 0 1.19 8l5.16 5.09L16.72 2.36A1 1 0 1 0 15.28.97l-8.96 9.28-3.73-3.68z" clip-rule="evenodd"></path></svg></span></span>');
-            //optionButtonPayment.append(spanCheck);
-            this.notSelectedTypePayment = false;
-            this.selectedTypePaymentName = typePaymentName;
-            this.selectedTypePaymentDescription = typePaymentDescription;
-            if (this.selectedTypePaymentName === 'dinheiro') {
-                $('#idModalChangeMoney').modal('show');
-            }
-        },
-        showModalChangeOfMoneyPrice() {
-            $('#idModalChangeMoney').modal('hide');
-            $('#idModalChangeMoneyPrice').modal('show');
-        },
-        onCloseModalChangeMoneyPrice(){
-            if(this.changeOfMoneyPrice <= parseFloat(this.listproductNew.totalPrice)){
-                this.changeOfMoney = 0;
-                this.changeOfMoneyPrice = 0;
-            }
-        },
-        confirmOfMoneyPrice() {
-            if(this.changeOfMoneyPrice <= parseFloat(this.listproductNew.totalPrice)){
-                alert('Erro, troco deve ser maior do que o valor do pedido');
-                this.changeOfMoney = 0;
-                this.changeOfMoneyPrice = 0;
-            } else {
-                this.changeOfMoney = this.changeOfMoneyPrice;
-                $('#idModalChangeMoneyPrice').modal('hide');
-            }
-        },
-        exeCheckOut() {
-            if (this.selectedTypePaymentName !== null) {
-                if (this.selectedTypePaymentName == 'paypal') {
-                    window.location.href = this.appurlNew + '/paypal/pagar';
-                } else if (this.selectedTypePaymentName == 'dinheiro') {
-                    axios.post( this.appurlNew+'/pedido/criar-pedido', {
-                        type_payment : this.selectedTypePaymentDescription,
-                        money_change: this.changeOfMoney
-                    }).then(response => {
-                        if(response.data.success === true){
-                            axios.get( this.appurlNew+'/send-message/whatsapp/'+response.data.idDemand).then(response => {
-                                if(response.data.success === true){
-                                    window.location.href= ''+this.appurlNew+'/pedidos';
-                                } else {
-                                    alert(response.data.message);
-                                }
-                            }).catch(error => {
-                                alert('Erro ao mandar mensagem!!!');
-                            });
-                        } else {
-                            alert(response.data.message);
-                        }
-                    }).catch(error => {
-                        alert('Erro ao fazer o pedido!!!');
-                    });
+            selectPayment(e, typePaymentName, typePaymentDescription) {
+                if (!this.notSelectedTypePayment) {
+                    $(".option-button").removeClass("option-button--active");
+                }
+                let optionButtonPayment = e.currentTarget;
+                optionButtonPayment.classList.add("option-button--active");
+                this.notSelectedTypePayment = false;
+                this.selectedTypePaymentName = typePaymentName;
+                this.selectedTypePaymentDescription = typePaymentDescription;
+                if (this.selectedTypePaymentName === 'dinheiro') {
+                    $('#idModalChangeMoney').modal('show');
+                }
+            },
+            showModalChangeOfMoneyPrice() {
+                $('#idModalChangeMoney').modal('hide');
+                $('#idModalChangeMoneyPrice').modal('show');
+            },
+            onCloseModalChangeMoneyPrice(){
+                if(this.changeOfMoneyPrice <= parseFloat(this.listproductNew.totalPrice)){
+                    this.changeOfMoney = 0;
+                    this.changeOfMoneyPrice = 0;
+                }
+            },
+            confirmOfMoneyPrice() {
+                if(this.changeOfMoneyPrice <= parseFloat(this.listproductNew.totalPrice)){
+                    alert('Erro, troco deve ser maior do que o valor do pedido');
+                    this.changeOfMoney = 0;
+                    this.changeOfMoneyPrice = 0;
                 } else {
-                    axios.post( this.appurlNew+'/pedido/criar-pedido', {
-                        type_payment : this.selectedTypePaymentDescription
-                    }).then(response => {
-                        if(response.data.success === true){
-                            axios.get( this.appurlNew+'/send-message/whatsapp/'+response.data.idDemand).then(response => {
-                                if(response.data.success === true){
-                                    window.location.href= ''+this.appurlNew+'/pedidos';
-                                } else {
-                                    alert(response.data.message);
-                                }
-                            }).catch(error => {
-                                alert('Erro ao mandar mensagem!!!');
-                            });
-                        } else {
-                            //alert(response.data.message);
-                            console.log(response.data.message);
-                        }
-                    }).catch(error => {
-                        alert('Erro ao fazer o pedido!!!');
-                    });
+                    this.changeOfMoney = this.changeOfMoneyPrice;
+                    $('#idModalChangeMoneyPrice').modal('hide');
+                }
+            },
+            exeCheckOut() {
+                if (this.selectedTypePaymentName !== null) {
+                    if (this.selectedTypePaymentName == 'paypal') {
+                        window.location.href = this.appUrl+'/paypal/pagar';
+                    } else if (this.selectedTypePaymentName == 'dinheiro') {
+                        axios.post( this.appUrl+'/pedido/criar-pedido', {
+                            type_payment : this.selectedTypePaymentDescription,
+                            money_change: this.changeOfMoney
+                        }).then(response => {
+                            if(response.data.success === true){
+                                axios.get( this.appUrl+'/send-message/whatsapp/'+response.data.idDemand).then(response => {
+                                    if(response.data.success === true){
+                                        window.location.href= ''+this.appUrl+'/pedidos';
+                                    } else {
+                                        alert(response.data.message);
+                                    }
+                                }).catch(error => {
+                                    alert('Erro ao mandar mensagem!!!');
+                                });
+                            } else {
+                                alert(response.data.message);
+                            }
+                        }).catch(error => {
+                            alert('Erro ao fazer o pedido!!!');
+                        });
+                    } else {
+                        axios.post( this.appUrl+'/pedido/criar-pedido', {
+                            type_payment : this.selectedTypePaymentDescription
+                        }).then(response => {
+                            if(response.data.success === true){
+                                axios.get( this.appUrl+'/send-message/whatsapp/'+response.data.idDemand).then(response => {
+                                    if(response.data.success === true){
+                                        window.location.href= ''+this.appUrl+'/pedidos';
+                                    } else {
+                                        alert(response.data.message);
+                                    }
+                                }).catch(error => {
+                                    alert('Erro ao mandar mensagem!!!');
+                                });
+                            } else {
+                                console.log(response.data.message);
+                            }
+                        }).catch(error => {
+                            alert('Erro ao fazer o pedido!!!');
+                        });
+                    }
                 }
             }
+        },
+        mounted() {
         }
-    },
-    mounted() {
-
     }
-}
-
 </script>
 <style>
     .payment-cash-modal__input-container {

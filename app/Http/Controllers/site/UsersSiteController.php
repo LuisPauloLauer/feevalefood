@@ -8,6 +8,7 @@ use App\UserSite;
 use App\mdSocialAccount;
 use App\mdUniversitybuildings;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
@@ -24,6 +25,25 @@ class UsersSiteController extends Controller
 
     function __destruct() {
         unset($this->generalLibrary);
+    }
+
+    public function loginWithEmail(Request $request)
+    {
+        $userSite = UserSite::where('email', $request->emaillogin)->where('password', Hash::make($request->passwordlogin))->first();
+
+        dd($userSite);
+
+        if(!filter_var($request->emaillogin, FILTER_VALIDATE_EMAIL)){
+            $response['success'] = false;
+            $response['message'] = 'O e-mail informado não é valido!';
+            echo json_encode($response);
+            return;
+        }
+
+        $response['success'] = true;
+        $response['message'] = 'teste login teste';
+        echo json_encode($response);
+        return;
     }
 
     public function loginUserSite(Request $request)
@@ -88,6 +108,7 @@ class UsersSiteController extends Controller
 
             $request->session()->put('userSiteLogged', $userSite);
 
+            //return redirect('/');
             //return redirect()->route('home.index');
             return redirect($request->session()->get('returnurlcallback'));
 
@@ -104,7 +125,6 @@ class UsersSiteController extends Controller
                $userSiteData = [
                     'status'                => 'S',
                     'name'                  => $userSiteFacebook->getName(),
-                    'slug'                  => Str::slug($userSiteFacebook->getName()),
                     'email'                 => $userSiteFacebook->getEmail(),
                     'email_verified_at'     => now(),
                     'avatar'                => $userSiteFacebook->getAvatar(),
@@ -171,7 +191,6 @@ class UsersSiteController extends Controller
                 $userSiteData = [
                     'status'                => 'S',
                     'name'                  => $userSiteGoogle->getName(),
-                    'slug'                  => Str::slug($userSiteGoogle->getName()),
                     'email'                 => $userSiteGoogle->getEmail(),
                     'email_verified_at'     => now(),
                     'avatar'                => $userSiteGoogle->getAvatar(),
@@ -286,9 +305,9 @@ class UsersSiteController extends Controller
 
         if($userSiteData){
             $UserSite->status               = $userSiteData['status'];
+            $UserSite->is_verified          = 1;
             $UserSite->universitybuilding   = $building;
             $UserSite->name                 = $name;
-            $UserSite->slug                 = $name;
             $UserSite->fone                 = $fone;
             $UserSite->email                = $userSiteData['email'];
             $UserSite->email_verified_at    = $userSiteData['email_verified_at'];
@@ -344,4 +363,23 @@ class UsersSiteController extends Controller
     {
         return view('site.user.terms');
     }
+
+    public function getBuildings()
+    {
+        $universityBuildings = mdUniversitybuildings::where('id', '<>', 1)->get();
+
+        if(!$universityBuildings){
+            $response['success'] = false;
+            $response['message'] = 'Erro ao buscar prédios!';
+            echo json_encode($response);
+            return;
+        } else {
+            $response['success'] = true;
+            $response['message'] = 'OK!';
+            $response['buildings'] = $universityBuildings;
+            echo json_encode($response);
+            return;
+        }
+    }
+
 }

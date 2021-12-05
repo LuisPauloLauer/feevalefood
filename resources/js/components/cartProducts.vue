@@ -46,91 +46,89 @@
 </template>
 
 <script>
-    var spanMiniCartQnt = $('#id-mini-cart-qnt');
-    var bodyOverLay = $('.body-overlay');
-export default {
-
-    props: ['listproduct', 'appurl'],
-
-    data() {
-        return {
-            listproductNew: this.listproduct,
-            appurlNew: this.appurl,
-            csrf: document.head.querySelector('meta[name="csrf-token"]').content
+    import config from '../config';
+    let spanMiniCartQnt = $('#id-mini-cart-qnt'),
+        bodyOverLay = $('.body-overlay');
+    export default {
+        props: ['listproduct'],
+        data() {
+            return {
+                appUrl: config.APP_URL,
+                listproductNew: this.listproduct,
+                csrf: document.head.querySelector('meta[name="csrf-token"]').content
+            }
+        },
+        methods: {
+            formatPrice(value) {
+                let val = (value / 1).toFixed(2).replace('.', ',')
+                return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+            },
+            deleteItemCart(object, idItem){
+                axios.post( this.appUrl+'/carrinho/deletar-item', {
+                    product_object : object,
+                    product_id: idItem
+                }).then(response => {
+                    if(response.data.success === true){
+                        this.listproductNew = response.data.cartProduct;
+                        if(!this.listproductNew){
+                            spanMiniCartQnt.text('0');
+                        } else {
+                            spanMiniCartQnt.text(this.listproductNew.totalQty)
+                        }
+                    } else {
+                        alert('Erro ao deletar item do carrinho');
+                    }
+                }).catch(error => {
+                    alert('Erro ao deletar item do carrinho');
+                });
+            },
+            addItemCart(object, idItem){
+                axios.post( this.appUrl+'/carrinho/editar-item', {
+                    product_object : object,
+                    product_id: idItem,
+                    product_operator: 'plus'
+                }).then(response => {
+                    if(response.data.success === true){
+                        this.listproductNew = response.data.cartProduct;
+                        if(!this.listproductNew){
+                            spanMiniCartQnt.text('0');
+                        } else {
+                            spanMiniCartQnt.text(this.listproductNew.totalQty)
+                        }
+                    } else {
+                        alert('Erro ao deletar item do carrinho');
+                    }
+                }).catch(error => {
+                    alert('Erro ao deletar item do carrinho');
+                });
+            },
+            minusItemCart(object, idItem){
+                axios.post( this.appUrl+'/carrinho/editar-item', {
+                    product_object : object,
+                    product_id: idItem,
+                    product_operator: 'minus'
+                }).then(response => {
+                    if(response.data.success === true){
+                        this.listproductNew = response.data.cartProduct;
+                        if(!this.listproductNew){
+                            spanMiniCartQnt.text('0');
+                        } else {
+                            spanMiniCartQnt.text(this.listproductNew.totalQty)
+                        }
+                    } else {
+                        alert('Erro ao deletar item do carrinho');
+                    }
+                }).catch(error => {
+                    alert('Erro ao deletar item do carrinho');
+                });
+            },
+            checkOut(){
+                window.location.href = this.appUrl+'/pedido/finalizar';
+            }
+        },
+        mounted() {
         }
-    },
-    methods: {
-        formatPrice(value) {
-            let val = (value / 1).toFixed(2).replace('.', ',')
-            return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-        },
-        deleteItemCart(object, idItem){
-            axios.post( this.appurlNew+'/carrinho/deletar-item', {
-                product_object : object,
-                product_id: idItem
-            }).then(response => {
-                if(response.data.success === true){
-                    this.listproductNew = response.data.cartProduct;
-                    if(!this.listproductNew){
-                        spanMiniCartQnt.text('0');
-                    } else {
-                        spanMiniCartQnt.text(this.listproductNew.totalQty)
-                    }
-                } else {
-                    alert('Erro ao deletar item do carrinho');
-                }
-            }).catch(error => {
-                alert('Erro ao deletar item do carrinho');
-            });
-        },
-        addItemCart(object, idItem){
-            axios.post( this.appurlNew+'/carrinho/editar-item', {
-                product_object : object,
-                product_id: idItem,
-                product_operator: 'plus'
-            }).then(response => {
-                if(response.data.success === true){
-                    this.listproductNew = response.data.cartProduct;
-                    if(!this.listproductNew){
-                        spanMiniCartQnt.text('0');
-                    } else {
-                        spanMiniCartQnt.text(this.listproductNew.totalQty)
-                    }
-                } else {
-                    alert('Erro ao deletar item do carrinho');
-                }
-            }).catch(error => {
-                alert('Erro ao deletar item do carrinho');
-            });
-        },
-        minusItemCart(object, idItem){
-            axios.post( this.appurlNew+'/carrinho/editar-item', {
-                product_object : object,
-                product_id: idItem,
-                product_operator: 'minus'
-            }).then(response => {
-                if(response.data.success === true){
-                    this.listproductNew = response.data.cartProduct;
-                    if(!this.listproductNew){
-                        spanMiniCartQnt.text('0');
-                    } else {
-                        spanMiniCartQnt.text(this.listproductNew.totalQty)
-                    }
-                } else {
-                    alert('Erro ao deletar item do carrinho');
-                }
-            }).catch(error => {
-                alert('Erro ao deletar item do carrinho');
-            });
-        },
-        checkOut(){
-            window.location.href = this.appurlNew+'/pedido/finalizar';
-        }
-    },
-    mounted() {
     }
-}
-
 </script>
 <style>
 </style>

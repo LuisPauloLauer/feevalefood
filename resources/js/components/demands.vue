@@ -95,40 +95,35 @@
 </template>
 
 <script>
-
-export default {
-
-    props: ['listdemand', 'listdemanditens', 'appurl'],
-
-    data() {
-        return {
-            listdemandNew: this.listdemand,
-            listdemanditensNew: this.listdemanditens,
-            appurlNew: this.appurl,
-            demandFilter: this.listdemand,
-            demandItensFilter: this.listdemanditens,
-            csrf: document.head.querySelector('meta[name="csrf-token"]').content
-        }
-    },
-    methods: {
-        formatPrice(value) {
-            let val = (value / 1).toFixed(2).replace('.', ',')
-            return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+    import config from '../config';
+    export default {
+        props: ['listdemand', 'listdemanditens'],
+        data() {
+            return {
+                appUrl: config.APP_URL,
+                listdemandNew: this.listdemand,
+                listdemanditensNew: this.listdemanditens,
+                demandFilter: this.listdemand,
+                demandItensFilter: this.listdemanditens,
+                csrf: document.head.querySelector('meta[name="csrf-token"]').content
+            }
         },
-        showModalDemand(pDemand){
-            this.demandFilter = Object.values(this.listdemand).filter(demandFiltered => demandFiltered.demand === pDemand);
-            this.demandItensFilter = Object.values(this.listdemanditens).filter(itemFiltered => itemFiltered.demand === pDemand);
-            $('#idModalDemand').modal('show');
+        methods: {
+            formatPrice(value) {
+                let val = (value / 1).toFixed(2).replace('.', ',')
+                return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+            },
+            showModalDemand(pDemand){
+                this.demandFilter = Object.values(this.listdemand).filter(demandFiltered => demandFiltered.demand === pDemand);
+                this.demandItensFilter = Object.values(this.listdemanditens).filter(itemFiltered => itemFiltered.demand === pDemand);
+                $('#idModalDemand').modal('show');
 
+            }
+        },
+        mounted() {
         }
-    },
-    mounted() {
-
     }
-}
-
 </script>
-
 <style scoped>
     .order-details-wrapper-header-demand:hover{
         cursor: pointer;

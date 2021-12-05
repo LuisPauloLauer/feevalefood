@@ -1,7 +1,7 @@
 <!-- Start Header Area -->
 <header class="htc__header bg--white">
     <!-- Start Mainmenu Area -->
-    <div id="sticky-header-with-topbar" class="mainmenu__wrap sticky__header">
+    <div id="sticky-header-with-topbar" class="mainmenu__wrap sticky__header fixed">
         <div class="container">
             <div class="row">
                 <div class="col-lg-2 col-sm-4 col-md-6 order-1 order-lg-1">
@@ -20,16 +20,16 @@
                                 </li>
                                 @if(Route::current()->getName() !== 'demands.view')
                                     <li class="drop">
-                                        <a href="#step1">Como funciona</a>
+                                        <a href="#como-funciona" class="link__ancor__step">Como funciona</a>
                                     </li>
                                     <li class="drop">
-                                        <a href="#step2">Cardápio</a>
+                                        <a href="#cardapio" class="link__ancor__step">Cardápio</a>
                                     </li>
                                     <li class="drop">
                                         <a target="_blank" href="https://www.ilpasticcinocaffe.com/">Blog</a>
                                     </li>
                                     <li class="drop">
-                                        <a href="#contato">Contato</a>
+                                        <a href="#contato" class="link__ancor__step">Contato</a>
                                     </li>
                                 @endif
                             </ul>

@@ -35,10 +35,7 @@ class CategoriesProductController extends Controller
     {
         if ($this->generalLibrary->isUserOfStoreSelected()) {
 
-            //$appUrl = env('APP_URL');
-            //dd($appUrl);
             $CategoriesProduct = mdCategoriesProduct::where('store', $this->generalLibrary->storeSelectedByUser())->orderBy('n_order', 'asc')->get();
-           // dd($CategoriesProduct);
 
             return view('admin.categoriesproduct.CategoriesProduct', [
                 'listCategoriesProduct' => $CategoriesProduct

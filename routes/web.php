@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 ////----------  Home ------------////
 Route::get('/', 'site\indexController@index')->name('home.index');
+
 Route::post('/product','site\shopCartController@showModalProduct')->name('product.showmodal');
 
 ////----------  Shop Cart ------------////
@@ -37,6 +38,7 @@ Route::get('/send-message/whatsapp-demand/{demand}','site\notificationController
 ////----------- Payments -----------////
 ////----------- Payment on Delivery -----------////
 Route::post('/pedido/criar-pedido','site\UserSiteDemandController@createDemand')->name('demand.create');
+
 ////----------- PayPal -----------////
 Route::get('/paypal/pagar','site\paypalPaymentController@create')->name('paypal.pay');
 Route::get('/paypal/execute-payment','site\paypalPaymentController@payPalStatus')->name('paypal.execute');
@@ -46,8 +48,11 @@ Route::get('usuario/politica-privacidade','site\UsersSiteController@userPolicy')
 Route::get('usuario/termos','site\UsersSiteController@userTerms')->name('usersite.terms');
 
 ////----------- Users Site -----------////
+Route::get('usuario/retorna-predios','site\UsersSiteController@getBuildings')->name('usersite.getbuildings');
 Route::get('usuario/login','site\UsersSiteController@loginUserSite')->name('usersite.login');
 Route::get('usuario/sair', 'site\UsersSiteController@logoutUserSite')->name('usersite.logout');
+
+Route::post('usuario/login/email','site\UsersSiteController@loginWithEmail')->name('usersite.login.email');
 
 Route::get('usuario/login/facebook', 'site\UsersSiteController@redirectToProviderFacebook')->name('usersite.login.facebook');
 Route::get('usuario/login/facebook/callback', 'site\UsersSiteController@handleProviderCallbackFacebook')->name('facebook.callback');
@@ -55,8 +60,10 @@ Route::get('usuario/login/facebook/callback', 'site\UsersSiteController@handlePr
 Route::get('usuario/login/google', 'site\UsersSiteController@redirectToProviderGoogle')->name('usersite.login.google');
 Route::get('usuario/login/google/callback', 'site\UsersSiteController@handleProviderCallbackGoogle')->name('google.callback');
 
+//Route::post('usuario/registro/email','site\UsersSiteController@registerUserSite')->name('usersite.register');
 Route::get('usuario/cadastro','site\UsersSiteController@createUserSite')->name('usersite.create');
 Route::post('usuario/salvar','site\UsersSiteController@storeUserSite')->name('usersite.store');
+
 
 ////-------- Shop Stores -------////
 //Route::get('/{segment}', 'site\pageSegmentsController@showStoresBySegment')->name('segment.page');
@@ -72,4 +79,3 @@ Route::post('usuario/salvar','site\UsersSiteController@storeUserSite')->name('us
 
 //Route::match(['get', 'post'], '/{segment}/{category}', 'site\pageSegmentsController@showStoresBySegmentByCategory')->name('segment.category.page');
 //Route::get('/home', 'HomeController@index')->name('home');
-

@@ -154,10 +154,8 @@ class GeneralLibrary
     {
         $phoneNumber = trim(str_replace('/', '', str_replace(' ', '', str_replace('-', '', str_replace(')', '', str_replace('(', '', $phoneNumber))))));
 
-        //$regexTelefone = "^[0-9]{11}$";
-
-        // $regexCel = '/[0-9]{2}[6789][0-9]{3,4}[0-9]{4}/'; // Regex para validar somente celular
         $regexPhone = '/^(?:(?:\+|00)?(55)\s?)?(?:\(?([1-9][0-9])\)?\s?)?(?:((?:9\d|[2-9])\d{3})\-?(\d{4}))$/'; // Regex para validar somente celular
+
         if (preg_match($regexPhone, $phoneNumber)) {
             return true;
         } else {
