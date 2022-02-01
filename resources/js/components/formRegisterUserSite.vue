@@ -96,7 +96,7 @@
 </template>
 
 <script>
-    import config from '../config';
+    import config from '@/utils/config';
     import {required, minLength, maxLength, email, sameAs } from 'vuelidate/lib/validators';
     export default {
         props: ['store'],
@@ -158,11 +158,10 @@
         },
         methods:{
             async getBuildings(){
-                const  response = await axios.get(this.appUrl+'/usuario/retorna-predios');
+                const  response = await axios.get(this.appUrlDashboard+'/api/usuario/retorna-predios');
                 if(response.status == 200){
                     if(response.data.success){
                         this.buildings = response.data.buildings;
-                        //console.log(this.buildings);
                     } else {
                         console.error(response.data.message);
                     }

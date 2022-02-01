@@ -164,6 +164,10 @@
                                                 <p>{{ listproduct.item.name }} x{{ listproduct.qty }}</p>
                                                 <p>R$ {{ formatPrice(listproduct.price) }}</p>
                                             </li>
+                                            <li><p class="strong">pedido subtotal</p>
+                                                <p class="strong">R$ {{ formatPrice(listproductNew.subTotalPrice) }}</p></li>
+                                            <li><p class="strong">pedido frete</p>
+                                                <p class="strong">R$ {{ formatPrice(listproductNew.shipping) }}</p></li>
                                             <li><p class="strong">pedido total</p>
                                                 <p class="strong">R$ {{ formatPrice(listproductNew.totalPrice) }}</p></li>
                                         </ul>
@@ -181,7 +185,7 @@
 </template>
 
 <script>
-    import config from '../config';
+    import config from '@/utils/config';
     import {Money} from 'v-money';
     export default {
         components: {Money},

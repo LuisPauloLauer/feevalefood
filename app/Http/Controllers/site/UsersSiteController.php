@@ -29,19 +29,9 @@ class UsersSiteController extends Controller
 
     public function loginWithEmail(Request $request)
     {
-        $userSite = UserSite::where('email', $request->emaillogin)->where('password', Hash::make($request->passwordlogin))->first();
-
-        dd($userSite);
-
-        if(!filter_var($request->emaillogin, FILTER_VALIDATE_EMAIL)){
-            $response['success'] = false;
-            $response['message'] = 'O e-mail informado não é valido!';
-            echo json_encode($response);
-            return;
-        }
-
-        $response['success'] = true;
-        $response['message'] = 'teste login teste';
+        $userSite = UserSite::where('id', $request->id)->first();
+        $request->session()->put('userSiteLogged', $userSite);
+        $response['success']        = true;
         echo json_encode($response);
         return;
     }
@@ -362,24 +352,6 @@ class UsersSiteController extends Controller
     public function userTerms()
     {
         return view('site.user.terms');
-    }
-
-    public function getBuildings()
-    {
-        $universityBuildings = mdUniversitybuildings::where('id', '<>', 1)->get();
-
-        if(!$universityBuildings){
-            $response['success'] = false;
-            $response['message'] = 'Erro ao buscar prédios!';
-            echo json_encode($response);
-            return;
-        } else {
-            $response['success'] = true;
-            $response['message'] = 'OK!';
-            $response['buildings'] = $universityBuildings;
-            echo json_encode($response);
-            return;
-        }
     }
 
 }

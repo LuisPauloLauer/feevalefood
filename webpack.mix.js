@@ -1,4 +1,7 @@
+const config = require('./webpack.config');
 const mix = require('laravel-mix');
+
+mix.webpackConfig(config);
 
 /*node_modules
  |--------------------------------------------------------------------------

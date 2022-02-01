@@ -31,8 +31,10 @@ class mdDemandsFood extends Model
             }
         }
 
+        $store = mdStores::where('id', $store)->first();
+
         $this->attributes['status']             = $statusDemand->id;
-        $this->attributes['store']              = $store;
+        $this->attributes['store']              = $store->id;
         $this->attributes['user_site']          = $pIDUserSite;
         $this->attributes['type_deliver']       = $pTypeDelivery;
         $this->attributes['type_payment']       = $pInformationPayment['typePayment'];
@@ -69,15 +71,15 @@ class mdDemandsFood extends Model
         $this->attributes['total_amount']               = $totalAmount;
         $this->attributes['sub_total_price']            = $subTotalPrice;
         $this->attributes['tax_price']                  = floatval ($pInformationPayment['taxPricePayment']);
-        $this->attributes['shipping_price']             = floatval ($pInformationPayment['shippingPricePayment']);
         $this->attributes['shipping_discount_price']    = floatval ($pInformationPayment['shippingDiscountPricePayment']);
         $this->attributes['insurance_price']            = floatval ($pInformationPayment['insurancePricePayment']);
         $this->attributes['handling_fee_price']         = floatval ($pInformationPayment['handlingFeePricePayment']);
-
         if(strtoupper($pInformationPayment['typePayment']) == 'PAYPAL'){
+            $this->attributes['shipping_price']             = floatval ($pInformationPayment['shippingPricePayment']);
             $this->attributes['total_price']                = floatval ($pInformationPayment['totalPayment']);
         } else {
-            $this->attributes['total_price']                = $subTotalPrice;
+            $this->attributes['shipping_price']             = $store->minimum_shipping;
+            $this->attributes['total_price']                = ($subTotalPrice + $store->minimum_shipping);
         }
 
         try {

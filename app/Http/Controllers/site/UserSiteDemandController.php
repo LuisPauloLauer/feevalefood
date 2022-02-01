@@ -43,7 +43,6 @@ class UserSiteDemandController extends Controller
         }
 
         $informationPayment = array(
-
             "invoiceNumberPayment"          => $invoiceNumberPayment,
             "typePayment"                   => $typePayment,
             "currencyPayment"               => $currencyPayment,

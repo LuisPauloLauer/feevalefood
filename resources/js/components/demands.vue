@@ -27,6 +27,14 @@
                             </ul>
                             <div class="order-details-cart__footer">
                                 <p class="order-details-cart__total-amount order-details__justified">
+                                    <span>Subtotal</span>
+                                    <span>R$&nbsp;{{formatPrice(demand.sub_total_price)}}</span>
+                                </p>
+                                <p class="order-details-cart__total-amount order-details__justified">
+                                    <span>Frete</span>
+                                    <span>R$&nbsp;{{formatPrice(demand.shipping_price)}}</span>
+                                </p>
+                                <p class="order-details-cart__total-amount order-details__justified">
                                     <span>Total</span>
                                     <span>R$&nbsp;{{formatPrice(demand.total_price)}}</span>
                                 </p>
@@ -78,6 +86,14 @@
                                                         <p v-else>R$&nbsp;{{ formatPrice(listdemanditens.product_price * listdemanditens.amount) }}</p>
                                                     </li>
                                                 <li>
+                                                    <p class="strong">Pedido Subtotal</p>
+                                                    <p class="strong">R$&nbsp;{{formatPrice(listdemand.sub_total_price)}}</p>
+                                                </li>
+                                                <li>
+                                                    <p class="strong">Pedido Frete</p>
+                                                    <p class="strong">R$&nbsp;{{formatPrice(listdemand.shipping_price)}}</p>
+                                                </li>
+                                                <li>
                                                     <p class="strong">Pedido Total</p>
                                                     <p class="strong">R$&nbsp;{{formatPrice(listdemand.total_price)}}</p>
                                                 </li>
@@ -95,7 +111,7 @@
 </template>
 
 <script>
-    import config from '../config';
+    import config from '@/utils/config';
     export default {
         props: ['listdemand', 'listdemanditens'],
         data() {

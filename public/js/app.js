@@ -1967,7 +1967,9 @@ module.exports = {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../config */ "./resources/js/config.js");
+/* harmony import */ var _utils_config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/utils/config */ "./resources/js/utils/config.js");
+//
+//
 //
 //
 //
@@ -2022,7 +2024,7 @@ var spanMiniCartQnt = $('#id-mini-cart-qnt'),
   props: ['listproduct'],
   data: function data() {
     return {
-      appUrl: _config__WEBPACK_IMPORTED_MODULE_0__["default"].APP_URL,
+      appUrl: _utils_config__WEBPACK_IMPORTED_MODULE_0__["default"].APP_URL,
       listproductNew: this.listproduct,
       csrf: document.head.querySelector('meta[name="csrf-token"]').content
     };
@@ -2104,7 +2106,9 @@ var spanMiniCartQnt = $('#id-mini-cart-qnt'),
       window.location.href = this.appUrl + '/pedido/finalizar';
     }
   },
-  mounted: function mounted() {}
+  mounted: function mounted() {
+    console.log(this.listproductNew);
+  }
 });
 
 /***/ }),
@@ -2118,9 +2122,13 @@ var spanMiniCartQnt = $('#id-mini-cart-qnt'),
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../config */ "./resources/js/config.js");
+/* harmony import */ var _utils_config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/utils/config */ "./resources/js/utils/config.js");
 /* harmony import */ var v_money__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! v-money */ "./node_modules/v-money/dist/v-money.js");
 /* harmony import */ var v_money__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(v_money__WEBPACK_IMPORTED_MODULE_1__);
+//
+//
+//
+//
 //
 //
 //
@@ -2312,7 +2320,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['listproduct', 'liststorepayment'],
   data: function data() {
     return {
-      appUrl: _config__WEBPACK_IMPORTED_MODULE_0__["default"].APP_URL,
+      appUrl: _utils_config__WEBPACK_IMPORTED_MODULE_0__["default"].APP_URL,
       listproductNew: this.listproduct,
       liststorepaymentNew: this.liststorepayment,
       notSelectedTypePayment: true,
@@ -2436,7 +2444,23 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../config */ "./resources/js/config.js");
+/* harmony import */ var _utils_config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/utils/config */ "./resources/js/utils/config.js");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2538,7 +2562,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['listdemand', 'listdemanditens'],
   data: function data() {
     return {
-      appUrl: _config__WEBPACK_IMPORTED_MODULE_0__["default"].APP_URL,
+      appUrl: _utils_config__WEBPACK_IMPORTED_MODULE_0__["default"].APP_URL,
       listdemandNew: this.listdemand,
       listdemanditensNew: this.listdemanditens,
       demandFilter: this.listdemand,
@@ -2577,7 +2601,7 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../config */ "./resources/js/config.js");
+/* harmony import */ var _utils_config__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/utils/config */ "./resources/js/utils/config.js");
 /* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuelidate/lib/validators */ "./node_modules/vuelidate/lib/validators/index.js");
 /* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_2__);
 
@@ -2618,22 +2642,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['store'],
   data: function data() {
     return {
-      appUrl: _config__WEBPACK_IMPORTED_MODULE_1__["default"].APP_URL,
-      appUrlDashboard: _config__WEBPACK_IMPORTED_MODULE_1__["default"].APP_URL_DASHBOARD,
+      appUrl: _utils_config__WEBPACK_IMPORTED_MODULE_1__["default"].APP_URL,
+      appUrlDashboard: _utils_config__WEBPACK_IMPORTED_MODULE_1__["default"].APP_URL_DASHBOARD,
       storeNew: this.store,
       email: '',
       fields: {},
-      errors: {},
-      sendSubmited: false
+      userSite: {}
     };
   },
   validations: {
@@ -2663,51 +2683,34 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 0:
                 _this.$v.$touch();
 
-                _this.sendSubmited = true; //let elbtnSubmit = document.getElementById('idspnsubmit');
-                //elbtnSubmit.innerText = 'Enviando dados...';
-
                 if (_this.$v.$invalid) {
-                  _context.next = 6;
+                  _context.next = 5;
                   break;
                 }
 
-                //alert('testandoooooooo');
                 _this.fields.store = _this.store.id;
-                _context.next = 6;
+                _context.next = 5;
                 return axios.post(_this.appUrlDashboard + '/api/usuario/login/email', _this.fields).then(function (response) {
                   if (response.data.success === true) {
-                    _this.fields = {};
-                    _this.errors = {};
-
-                    _this.$v.$reset();
-
-                    toastr.success(response.data.message);
+                    //this.userSite.user = response.data.user;
+                    //console.log(this.userSite);
+                    axios.post(_this.appUrl + '/usuario/login/email', response.data.user).then(function (response) {
+                      if (response.data.success === true) {
+                        window.location.reload();
+                      } else {
+                        toastr.error(response.data.message);
+                      }
+                    })["catch"](function (error) {
+                      console.error(error.response.data);
+                    });
                   } else {
-                    _this.errors = {};
-
-                    if (response.data.typeMessage == 'foneError') {
-                      _this.errors = {
-                        fone: {
-                          0: response.data.message
-                        }
-                      };
-                      toastr.error('Verifique os dados!!!');
-                    } else if (response.data.typeMessage == 'buildingError') {
-                      _this.errors = {
-                        building: {
-                          0: response.data.message
-                        }
-                      };
-                      toastr.error('Verifique os dados!!!');
-                    } else if (response.data.typeMessage == 'storeError') {
-                      toastr.error(response.data.message);
-                    }
+                    toastr.error(response.data.message);
                   }
                 })["catch"](function (error) {
                   console.error(error.response.data);
                 });
 
-              case 6:
+              case 5:
               case "end":
                 return _context.stop();
             }
@@ -2732,7 +2735,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../config */ "./resources/js/config.js");
+/* harmony import */ var _utils_config__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/utils/config */ "./resources/js/utils/config.js");
 /* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuelidate/lib/validators */ "./node_modules/vuelidate/lib/validators/index.js");
 /* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_2__);
 
@@ -2844,8 +2847,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   props: ['store'],
   data: function data() {
     return {
-      appUrl: _config__WEBPACK_IMPORTED_MODULE_1__["default"].APP_URL,
-      appUrlDashboard: _config__WEBPACK_IMPORTED_MODULE_1__["default"].APP_URL_DASHBOARD,
+      appUrl: _utils_config__WEBPACK_IMPORTED_MODULE_1__["default"].APP_URL,
+      appUrlDashboard: _utils_config__WEBPACK_IMPORTED_MODULE_1__["default"].APP_URL_DASHBOARD,
       storeNew: this.store,
       name: '',
       email: '',
@@ -2906,14 +2909,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context.prev = _context.next) {
               case 0:
                 _context.next = 2;
-                return axios.get(_this.appUrl + '/usuario/retorna-predios');
+                return axios.get(_this.appUrlDashboard + '/api/usuario/retorna-predios');
 
               case 2:
                 response = _context.sent;
 
                 if (response.status == 200) {
                   if (response.data.success) {
-                    _this.buildings = response.data.buildings; //console.log(this.buildings);
+                    _this.buildings = response.data.buildings;
                   } else {
                     console.error(response.data.message);
                   }
@@ -40332,6 +40335,32 @@ var render = function() {
                     ])
                   ]),
                   _vm._v(" "),
+                  _c("li", [
+                    _c("span", { staticClass: "cartbox__total__title" }, [
+                      _vm._v("Valor subtotal")
+                    ]),
+                    _c("span", { staticClass: "price" }, [
+                      _vm._v(
+                        "R$ " +
+                          _vm._s(
+                            _vm.formatPrice(_vm.listproductNew.subTotalPrice)
+                          )
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("li", [
+                    _c("span", { staticClass: "cartbox__total__title" }, [
+                      _vm._v("Valor da entrega")
+                    ]),
+                    _c("span", { staticClass: "price" }, [
+                      _vm._v(
+                        "R$ " +
+                          _vm._s(_vm.formatPrice(_vm.listproductNew.shipping))
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
                   _c("li", { staticClass: "grandtotal" }, [
                     _vm._v("Valor total"),
                     _c("span", { staticClass: "price" }, [
@@ -40869,6 +40898,38 @@ var render = function() {
                           _vm._v(" "),
                           _c("li", [
                             _c("p", { staticClass: "strong" }, [
+                              _vm._v("pedido subtotal")
+                            ]),
+                            _vm._v(" "),
+                            _c("p", { staticClass: "strong" }, [
+                              _vm._v(
+                                "R$ " +
+                                  _vm._s(
+                                    _vm.formatPrice(
+                                      _vm.listproductNew.subTotalPrice
+                                    )
+                                  )
+                              )
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("li", [
+                            _c("p", { staticClass: "strong" }, [
+                              _vm._v("pedido frete")
+                            ]),
+                            _vm._v(" "),
+                            _c("p", { staticClass: "strong" }, [
+                              _vm._v(
+                                "R$ " +
+                                  _vm._s(
+                                    _vm.formatPrice(_vm.listproductNew.shipping)
+                                  )
+                              )
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("li", [
+                            _c("p", { staticClass: "strong" }, [
                               _vm._v("pedido total")
                             ]),
                             _vm._v(" "),
@@ -41146,6 +41207,42 @@ var render = function() {
                             "order-details-cart__total-amount order-details__justified"
                         },
                         [
+                          _c("span", [_vm._v("Subtotal")]),
+                          _vm._v(" "),
+                          _c("span", [
+                            _vm._v(
+                              "R$ " +
+                                _vm._s(_vm.formatPrice(demand.sub_total_price))
+                            )
+                          ])
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "p",
+                        {
+                          staticClass:
+                            "order-details-cart__total-amount order-details__justified"
+                        },
+                        [
+                          _c("span", [_vm._v("Frete")]),
+                          _vm._v(" "),
+                          _c("span", [
+                            _vm._v(
+                              "R$ " +
+                                _vm._s(_vm.formatPrice(demand.shipping_price))
+                            )
+                          ])
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "p",
+                        {
+                          staticClass:
+                            "order-details-cart__total-amount order-details__justified"
+                        },
+                        [
                           _c("span", [_vm._v("Total")]),
                           _vm._v(" "),
                           _c("span", [
@@ -41323,6 +41420,40 @@ var render = function() {
                               _vm._v(" "),
                               _c("li", [
                                 _c("p", { staticClass: "strong" }, [
+                                  _vm._v("Pedido Subtotal")
+                                ]),
+                                _vm._v(" "),
+                                _c("p", { staticClass: "strong" }, [
+                                  _vm._v(
+                                    "R$ " +
+                                      _vm._s(
+                                        _vm.formatPrice(
+                                          listdemand.sub_total_price
+                                        )
+                                      )
+                                  )
+                                ])
+                              ]),
+                              _vm._v(" "),
+                              _c("li", [
+                                _c("p", { staticClass: "strong" }, [
+                                  _vm._v("Pedido Frete")
+                                ]),
+                                _vm._v(" "),
+                                _c("p", { staticClass: "strong" }, [
+                                  _vm._v(
+                                    "R$ " +
+                                      _vm._s(
+                                        _vm.formatPrice(
+                                          listdemand.shipping_price
+                                        )
+                                      )
+                                  )
+                                ])
+                              ]),
+                              _vm._v(" "),
+                              _c("li", [
+                                _c("p", { staticClass: "strong" }, [
                                   _vm._v("Pedido Total")
                                 ]),
                                 _vm._v(" "),
@@ -41433,12 +41564,8 @@ var render = function() {
             ],
             staticClass: "form-control",
             class: {
-              "is-invalid": _vm.$v.email.$error || _vm.errors.email,
-              "is-valid":
-                (!_vm.sendSubmited && !_vm.$v.email.$invalid) ||
-                (!_vm.$v.email.$invalid &&
-                  _vm.sendSubmited &&
-                  !_vm.errors.email)
+              "is-invalid": _vm.$v.email.$error,
+              "is-valid": !_vm.$v.email.$invalid
             },
             attrs: {
               id: "idemaillogin",
@@ -41474,21 +41601,15 @@ var render = function() {
             _vm._v("Email é válido.")
           ]),
           _vm._v(" "),
-          !_vm.errors.email
-            ? _c("div", { staticClass: "invalid-feedback" }, [
-                !_vm.$v.email.required
-                  ? _c("span", [_vm._v("Email está vazio!")])
-                  : _vm._e(),
-                _vm._v(" "),
-                !_vm.$v.email.isUnique
-                  ? _c("span", [_vm._v("Formato de email é inválido!")])
-                  : _vm._e()
-              ])
-            : _c("div", { staticClass: "invalid-feedback" }, [
-                _vm.errors && _vm.errors.email
-                  ? _c("span", [_vm._v(_vm._s(_vm.errors.email[0]))])
-                  : _vm._e()
-              ])
+          _c("div", { staticClass: "invalid-feedback" }, [
+            !_vm.$v.email.required
+              ? _c("span", [_vm._v("Email está vazio!")])
+              : _vm._e(),
+            _vm._v(" "),
+            !_vm.$v.email.isUnique
+              ? _c("span", [_vm._v("Formato de email é inválido!")])
+              : _vm._e()
+          ])
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "input-group mb-3" }, [
@@ -56787,10 +56908,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/config.js":
-/*!********************************!*\
-  !*** ./resources/js/config.js ***!
-  \********************************/
+/***/ "./resources/js/utils/config.js":
+/*!**************************************!*\
+  !*** ./resources/js/utils/config.js ***!
+  \**************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
