@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\site;
 
+use App\CartKit;
+use App\CartProduct;
 use App\Http\Controllers\Controller;
 use App\Library\GeneralLibrary;
 use App\UserSite;
 use App\mdSocialAccount;
 use App\mdUniversitybuildings;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
 
 class UsersSiteController extends Controller
@@ -32,6 +32,25 @@ class UsersSiteController extends Controller
         $userSite = UserSite::where('id', $request->id)->first();
         $request->session()->put('userSiteLogged', $userSite);
         $response['success']        = true;
+        if(Session::has('returnurlcallback')){
+            $response['redirecturl']    = Session::get('returnurlcallback');
+        } else {
+            $response['redirecturl']    = url()->previous();
+        }
+
+        if(Session::has('shopCartKit')){
+            $oldCartKit     = Session::get('shopCartKit');
+            $objCartKit     = new CartKit($oldCartKit);
+            $objCartKit->updateValues();
+            $request->session()->put('shopCartKit', $objCartKit);
+        }
+        if(Session::has('shopCartProduct')){
+            $oldCartProduct     = Session::get('shopCartProduct');
+            $objCartProduct     = new CartProduct($oldCartProduct);
+            $objCartProduct->updateValues();
+            $request->session()->put('shopCartProduct', $objCartProduct);
+        }
+
         echo json_encode($response);
         return;
     }
@@ -50,6 +69,20 @@ class UsersSiteController extends Controller
             if(Session::has('showModalLoginUser')){
                 $request->session()->forget('showModalLoginUser');
             }
+
+            if(Session::has('shopCartKit')){
+                $oldCartKit     = Session::get('shopCartKit');
+                $objCartKit     = new CartKit($oldCartKit);
+                $objCartKit->updateValues();
+                $request->session()->put('shopCartKit', $objCartKit);
+            }
+            if(Session::has('shopCartProduct')){
+                $oldCartProduct     = Session::get('shopCartProduct');
+                $objCartProduct     = new CartProduct($oldCartProduct);
+                $objCartProduct->updateValues();
+                $request->session()->put('shopCartProduct', $objCartProduct);
+            }
+
             return redirect()->route('home.index');
         }
     }
@@ -62,6 +95,20 @@ class UsersSiteController extends Controller
         }
 
         if(Session::has('userSiteLogged')){
+
+            if(Session::has('shopCartKit')){
+                $oldCartKit     = Session::get('shopCartKit');
+                $objCartKit     = new CartKit($oldCartKit);
+                $objCartKit->updateValues();
+                $request->session()->put('shopCartKit', $objCartKit);
+            }
+            if(Session::has('shopCartProduct')){
+                $oldCartProduct     = Session::get('shopCartProduct');
+                $objCartProduct     = new CartProduct($oldCartProduct);
+                $objCartProduct->updateValues();
+                $request->session()->put('shopCartProduct', $objCartProduct);
+            }
+
             return redirect($request->session()->get('returnurlcallback'));
         }
 
@@ -76,6 +123,20 @@ class UsersSiteController extends Controller
         }
 
         if(Session::has('userSiteLogged')){
+
+            if(Session::has('shopCartKit')){
+                $oldCartKit     = Session::get('shopCartKit');
+                $objCartKit     = new CartKit($oldCartKit);
+                $objCartKit->updateValues();
+                $request->session()->put('shopCartKit', $objCartKit);
+            }
+            if(Session::has('shopCartProduct')){
+                $oldCartProduct     = Session::get('shopCartProduct');
+                $objCartProduct     = new CartProduct($oldCartProduct);
+                $objCartProduct->updateValues();
+                $request->session()->put('shopCartProduct', $objCartProduct);
+            }
+
             return redirect($request->session()->get('returnurlcallback'));
         }
 
@@ -89,7 +150,7 @@ class UsersSiteController extends Controller
         $userSiteFacebook = Socialite::driver('facebook')->user();
 
         $SocialAccount = mdSocialAccount::where('provider_name', 'facebook')
-            ->where('provider_id', $userSiteFacebook->getId())
+            ->where('email', $userSiteFacebook->getEmail())
             ->first();
 
         if ($SocialAccount) {
@@ -97,6 +158,19 @@ class UsersSiteController extends Controller
             $userSite  = mdSocialAccount::find($SocialAccount->id)->pesqUserSite;
 
             $request->session()->put('userSiteLogged', $userSite);
+
+            if(Session::has('shopCartKit')){
+                $oldCartKit     = Session::get('shopCartKit');
+                $objCartKit     = new CartKit($oldCartKit);
+                $objCartKit->updateValues();
+                $request->session()->put('shopCartKit', $objCartKit);
+            }
+            if(Session::has('shopCartProduct')){
+                $oldCartProduct     = Session::get('shopCartProduct');
+                $objCartProduct     = new CartProduct($oldCartProduct);
+                $objCartProduct->updateValues();
+                $request->session()->put('shopCartProduct', $objCartProduct);
+            }
 
             //return redirect('/');
             //return redirect()->route('home.index');
@@ -142,6 +216,19 @@ class UsersSiteController extends Controller
 
                 $request->session()->put('userSiteLogged', $userSite);
 
+                if(Session::has('shopCartKit')){
+                    $oldCartKit     = Session::get('shopCartKit');
+                    $objCartKit     = new CartKit($oldCartKit);
+                    $objCartKit->updateValues();
+                    $request->session()->put('shopCartKit', $objCartKit);
+                }
+                if(Session::has('shopCartProduct')){
+                    $oldCartProduct     = Session::get('shopCartProduct');
+                    $objCartProduct     = new CartProduct($oldCartProduct);
+                    $objCartProduct->updateValues();
+                    $request->session()->put('shopCartProduct', $objCartProduct);
+                }
+
                 //return redirect()->route('home.index');
                 return redirect($request->session()->get('returnurlcallback'));
 
@@ -156,7 +243,7 @@ class UsersSiteController extends Controller
         $userSiteGoogle = Socialite::driver('google')->user();
 
         $SocialAccount = mdSocialAccount::where('provider_name', 'google')
-            ->where('provider_id', $userSiteGoogle->getId())
+            ->where('email', $userSiteGoogle->getEmail())
             ->first();
 
         if ($SocialAccount) {
@@ -164,6 +251,19 @@ class UsersSiteController extends Controller
             $userSite  = mdSocialAccount::find($SocialAccount->id)->pesqUserSite;
 
             $request->session()->put('userSiteLogged', $userSite);
+
+            if(Session::has('shopCartKit')){
+                $oldCartKit     = Session::get('shopCartKit');
+                $objCartKit     = new CartKit($oldCartKit);
+                $objCartKit->updateValues();
+                $request->session()->put('shopCartKit', $objCartKit);
+            }
+            if(Session::has('shopCartProduct')){
+                $oldCartProduct     = Session::get('shopCartProduct');
+                $objCartProduct     = new CartProduct($oldCartProduct);
+                $objCartProduct->updateValues();
+                $request->session()->put('shopCartProduct', $objCartProduct);
+            }
 
             // return redirect()->route('home.index');
             return redirect($request->session()->get('returnurlcallback'));
@@ -205,6 +305,19 @@ class UsersSiteController extends Controller
 
                 $request->session()->put('userSiteLogged', $userSite);
 
+                if(Session::has('shopCartKit')){
+                    $oldCartKit     = Session::get('shopCartKit');
+                    $objCartKit     = new CartKit($oldCartKit);
+                    $objCartKit->updateValues();
+                    $request->session()->put('shopCartKit', $objCartKit);
+                }
+                if(Session::has('shopCartProduct')){
+                    $oldCartProduct     = Session::get('shopCartProduct');
+                    $objCartProduct     = new CartProduct($oldCartProduct);
+                    $objCartProduct->updateValues();
+                    $request->session()->put('shopCartProduct', $objCartProduct);
+                }
+
                 //return redirect()->route('home.index');
                 return redirect($request->session()->get('returnurlcallback'));
 
@@ -214,7 +327,7 @@ class UsersSiteController extends Controller
 
     public function createUserSite(Request $request)
     {
-        $universityBuildings = mdUniversitybuildings::where('id', '<>', 1)->get();
+        $universityBuildings = mdUniversitybuildings::where('id', '<>', 1)->where('company_name', '<>', 'AREZZO')->get();
 
         $request->session()->put('universityBuildings', $universityBuildings);
 
@@ -309,6 +422,19 @@ class UsersSiteController extends Controller
             if($UserSite->save()){
 
                 $request->session()->put('userSiteLogged', $UserSite);
+
+                if(Session::has('shopCartKit')){
+                    $oldCartKit     = Session::get('shopCartKit');
+                    $objCartKit     = new CartKit($oldCartKit);
+                    $objCartKit->updateValues();
+                    $request->session()->put('shopCartKit', $objCartKit);
+                }
+                if(Session::has('shopCartProduct')){
+                    $oldCartProduct     = Session::get('shopCartProduct');
+                    $objCartProduct     = new CartProduct($oldCartProduct);
+                    $objCartProduct->updateValues();
+                    $request->session()->put('shopCartProduct', $objCartProduct);
+                }
 
                 $UserSite->allSocialAccountsByUserSite()->create([
                     'provider_name' => $userSiteData['provider'],

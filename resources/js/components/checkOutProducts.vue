@@ -164,10 +164,12 @@
                                                 <p>{{ listproduct.item.name }} x{{ listproduct.qty }}</p>
                                                 <p>R$ {{ formatPrice(listproduct.price) }}</p>
                                             </li>
-                                            <li><p class="strong">pedido subtotal</p>
+                                            <li v-if="listproductNew.subTotalPrice !== listproductNew.totalPrice"><p class="strong">pedido subtotal</p>
                                                 <p class="strong">R$ {{ formatPrice(listproductNew.subTotalPrice) }}</p></li>
-                                            <li><p class="strong">pedido frete</p>
+                                            <li v-if="listproductNew.shipping > 0"><p class="strong">pedido frete</p>
                                                 <p class="strong">R$ {{ formatPrice(listproductNew.shipping) }}</p></li>
+                                            <li v-if="listproductNew.percDiscount > 0"><p class="strong">pedido desconto</p>
+                                                <p class="strong">{{ formatPrice(listproductNew.percDiscount) }} %</p></li>
                                             <li><p class="strong">pedido total</p>
                                                 <p class="strong">R$ {{ formatPrice(listproductNew.totalPrice) }}</p></li>
                                         </ul>
@@ -253,8 +255,29 @@
                 if (this.selectedTypePaymentName !== null) {
                     if (this.selectedTypePaymentName == 'paypal') {
                         window.location.href = this.appUrl+'/paypal/pagar';
+                        /*
+                         axios.get( this.appUrl+'/paypal/pagar'
+                        ).then(response => {
+                            if(response.data.success === true){
+                                axios.get( this.appUrl+'/send-message/whatsapp/'+response.data.idDemand).then(response => {
+                                    if(response.data.success === true){
+                                        window.location.href= ''+this.appUrl+'/pedidos';
+                                    } else {
+                                        alert(response.data.message);
+                                        window.location.href= ''+this.appUrl+'/pedidos';
+                                    }
+                                }).catch(error => {
+                                    alert('Erro ao mandar mensagem!!!');
+                                    window.location.href= ''+this.appUrl+'/pedidos';
+                                });
+                            } else {
+                                alert(response.data.message);
+                            }
+                        }).catch(error => {
+                            alert('Erro ao fazer o pedido!!!');
+                        }); */
                     } else if (this.selectedTypePaymentName == 'dinheiro') {
-                        axios.post( this.appUrl+'/pedido/criar-pedido', {
+                         axios.post( this.appUrl+'/pedido/criar-pedido', {
                             type_payment : this.selectedTypePaymentDescription,
                             money_change: this.changeOfMoney
                         }).then(response => {
@@ -264,9 +287,11 @@
                                         window.location.href= ''+this.appUrl+'/pedidos';
                                     } else {
                                         alert(response.data.message);
+                                        window.location.href= ''+this.appUrl+'/pedidos';
                                     }
                                 }).catch(error => {
-                                    alert('Erro ao mandar mensagem!!!');
+                                    alert('Erro ao mandar mensagem de aviso da inclusão do pedido para o whatsApp da loja!!!');
+                                    window.location.href= ''+this.appUrl+'/pedidos';
                                 });
                             } else {
                                 alert(response.data.message);
@@ -275,7 +300,7 @@
                             alert('Erro ao fazer o pedido!!!');
                         });
                     } else {
-                        axios.post( this.appUrl+'/pedido/criar-pedido', {
+                         axios.post( this.appUrl+'/pedido/criar-pedido', {
                             type_payment : this.selectedTypePaymentDescription
                         }).then(response => {
                             if(response.data.success === true){
@@ -284,12 +309,14 @@
                                         window.location.href= ''+this.appUrl+'/pedidos';
                                     } else {
                                         alert(response.data.message);
+                                        window.location.href= ''+this.appUrl+'/pedidos';
                                     }
                                 }).catch(error => {
-                                    alert('Erro ao mandar mensagem!!!');
+                                    alert('Erro ao mandar mensagem de aviso da inclusão do pedido para o whatsApp da loja!!!');
+                                    window.location.href= ''+this.appUrl+'/pedidos';
                                 });
                             } else {
-                                console.log(response.data.message);
+                                alert(response.data.message);
                             }
                         }).catch(error => {
                             alert('Erro ao fazer o pedido!!!');

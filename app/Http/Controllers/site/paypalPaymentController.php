@@ -163,8 +163,14 @@ class paypalPaymentController extends Controller
                         $request->session()->forget('shopCartKit');
                         $request->session()->forget('shopCartProduct');
 
-                        return redirect()->route('message.whatsapp.demand', ['demand' => $DemandFoodStatus['id_demand']]);
+                        /*
+                        $responseDemand['success'] = $DemandFoodStatus['msg_erro_status'];
+                        $responseDemand['message'] = 'Pedido Nº: '.$DemandFoodStatus['id_demand'].' inserido com sucesso.';
+                        $responseDemand['id_demand'] = $DemandFoodStatus['id_demand'];
+                        echo json_encode($responseDemand);
+                        return; */
 
+                        return redirect()->route('message.whatsapp.demand', ['demand' => $DemandFoodStatus['id_demand']]);
                         //return redirect()->route('demands.view');
 
                     } else {

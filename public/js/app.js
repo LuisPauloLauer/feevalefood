@@ -2017,6 +2017,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 var spanMiniCartQnt = $('#id-mini-cart-qnt'),
     bodyOverLay = $('.body-overlay');
@@ -2106,9 +2107,7 @@ var spanMiniCartQnt = $('#id-mini-cart-qnt'),
       window.location.href = this.appUrl + '/pedido/finalizar';
     }
   },
-  mounted: function mounted() {
-    console.log(this.listproductNew);
-  }
+  mounted: function mounted() {}
 });
 
 /***/ }),
@@ -2125,6 +2124,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/utils/config */ "./resources/js/utils/config.js");
 /* harmony import */ var v_money__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! v-money */ "./node_modules/v-money/dist/v-money.js");
 /* harmony import */ var v_money__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(v_money__WEBPACK_IMPORTED_MODULE_1__);
+//
+//
 //
 //
 //
@@ -2385,6 +2386,27 @@ __webpack_require__.r(__webpack_exports__);
       if (this.selectedTypePaymentName !== null) {
         if (this.selectedTypePaymentName == 'paypal') {
           window.location.href = this.appUrl + '/paypal/pagar';
+          /*
+           axios.get( this.appUrl+'/paypal/pagar'
+          ).then(response => {
+              if(response.data.success === true){
+                  axios.get( this.appUrl+'/send-message/whatsapp/'+response.data.idDemand).then(response => {
+                      if(response.data.success === true){
+                          window.location.href= ''+this.appUrl+'/pedidos';
+                      } else {
+                          alert(response.data.message);
+                          window.location.href= ''+this.appUrl+'/pedidos';
+                      }
+                  }).catch(error => {
+                      alert('Erro ao mandar mensagem!!!');
+                      window.location.href= ''+this.appUrl+'/pedidos';
+                  });
+              } else {
+                  alert(response.data.message);
+              }
+          }).catch(error => {
+              alert('Erro ao fazer o pedido!!!');
+          }); */
         } else if (this.selectedTypePaymentName == 'dinheiro') {
           axios.post(this.appUrl + '/pedido/criar-pedido', {
             type_payment: this.selectedTypePaymentDescription,
@@ -2396,9 +2418,11 @@ __webpack_require__.r(__webpack_exports__);
                   window.location.href = '' + _this.appUrl + '/pedidos';
                 } else {
                   alert(response.data.message);
+                  window.location.href = '' + _this.appUrl + '/pedidos';
                 }
               })["catch"](function (error) {
-                alert('Erro ao mandar mensagem!!!');
+                alert('Erro ao mandar mensagem de aviso da inclusão do pedido para o whatsApp da loja!!!');
+                window.location.href = '' + _this.appUrl + '/pedidos';
               });
             } else {
               alert(response.data.message);
@@ -2416,12 +2440,14 @@ __webpack_require__.r(__webpack_exports__);
                   window.location.href = '' + _this.appUrl + '/pedidos';
                 } else {
                   alert(response.data.message);
+                  window.location.href = '' + _this.appUrl + '/pedidos';
                 }
               })["catch"](function (error) {
-                alert('Erro ao mandar mensagem!!!');
+                alert('Erro ao mandar mensagem de aviso da inclusão do pedido para o whatsApp da loja!!!');
+                window.location.href = '' + _this.appUrl + '/pedidos';
               });
             } else {
-              console.log(response.data.message);
+              alert(response.data.message);
             }
           })["catch"](function (error) {
             alert('Erro ao fazer o pedido!!!');
@@ -2642,6 +2668,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2652,6 +2682,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       appUrlDashboard: _utils_config__WEBPACK_IMPORTED_MODULE_1__["default"].APP_URL_DASHBOARD,
       storeNew: this.store,
       email: '',
+      password: '',
       fields: {},
       userSite: {}
     };
@@ -2669,6 +2700,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           }, 350 + Math.random() * 300);
         });
       }
+    },
+    password: {
+      required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_2__["required"]
     }
   },
   computed: {},
@@ -2696,7 +2730,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     //console.log(this.userSite);
                     axios.post(_this.appUrl + '/usuario/login/email', response.data.user).then(function (response) {
                       if (response.data.success === true) {
-                        window.location.reload();
+                        window.location.assign(response.data.redirecturl);
                       } else {
                         toastr.error(response.data.message);
                       }
@@ -40335,31 +40369,51 @@ var render = function() {
                     ])
                   ]),
                   _vm._v(" "),
-                  _c("li", [
-                    _c("span", { staticClass: "cartbox__total__title" }, [
-                      _vm._v("Valor subtotal")
-                    ]),
-                    _c("span", { staticClass: "price" }, [
-                      _vm._v(
-                        "R$ " +
-                          _vm._s(
-                            _vm.formatPrice(_vm.listproductNew.subTotalPrice)
+                  _vm.listproductNew.subTotalPrice !==
+                  _vm.listproductNew.totalPrice
+                    ? _c("li", [
+                        _c("span", { staticClass: "cartbox__total__title" }, [
+                          _vm._v("Valor subtotal")
+                        ]),
+                        _c("span", { staticClass: "price" }, [
+                          _vm._v(
+                            "R$ " +
+                              _vm._s(
+                                _vm.formatPrice(
+                                  _vm.listproductNew.subTotalPrice
+                                )
+                              )
                           )
-                      )
-                    ])
-                  ]),
+                        ])
+                      ])
+                    : _vm._e(),
                   _vm._v(" "),
-                  _c("li", [
-                    _c("span", { staticClass: "cartbox__total__title" }, [
-                      _vm._v("Valor da entrega")
-                    ]),
-                    _c("span", { staticClass: "price" }, [
-                      _vm._v(
-                        "R$ " +
-                          _vm._s(_vm.formatPrice(_vm.listproductNew.shipping))
-                      )
-                    ])
-                  ]),
+                  _vm.listproductNew.shipping > 0
+                    ? _c("li", [
+                        _c("span", { staticClass: "cartbox__total__title" }, [
+                          _vm._v("Valor da entrega")
+                        ]),
+                        _c("span", { staticClass: "price" }, [
+                          _vm._v(
+                            "R$ " +
+                              _vm._s(
+                                _vm.formatPrice(_vm.listproductNew.shipping)
+                              )
+                          )
+                        ])
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.listproductNew.percDiscount > 0
+                    ? _c("li", [
+                        _c("span", { staticClass: "cartbox__total__title" }, [
+                          _vm._v("Desconto %")
+                        ]),
+                        _c("span", { staticClass: "price" }, [
+                          _vm._v(_vm._s(_vm.listproductNew.percDiscount) + " %")
+                        ])
+                      ])
+                    : _vm._e(),
                   _vm._v(" "),
                   _c("li", { staticClass: "grandtotal" }, [
                     _vm._v("Valor total"),
@@ -40896,37 +40950,62 @@ var render = function() {
                             ])
                           }),
                           _vm._v(" "),
-                          _c("li", [
-                            _c("p", { staticClass: "strong" }, [
-                              _vm._v("pedido subtotal")
-                            ]),
-                            _vm._v(" "),
-                            _c("p", { staticClass: "strong" }, [
-                              _vm._v(
-                                "R$ " +
-                                  _vm._s(
-                                    _vm.formatPrice(
-                                      _vm.listproductNew.subTotalPrice
-                                    )
+                          _vm.listproductNew.subTotalPrice !==
+                          _vm.listproductNew.totalPrice
+                            ? _c("li", [
+                                _c("p", { staticClass: "strong" }, [
+                                  _vm._v("pedido subtotal")
+                                ]),
+                                _vm._v(" "),
+                                _c("p", { staticClass: "strong" }, [
+                                  _vm._v(
+                                    "R$ " +
+                                      _vm._s(
+                                        _vm.formatPrice(
+                                          _vm.listproductNew.subTotalPrice
+                                        )
+                                      )
                                   )
-                              )
-                            ])
-                          ]),
+                                ])
+                              ])
+                            : _vm._e(),
                           _vm._v(" "),
-                          _c("li", [
-                            _c("p", { staticClass: "strong" }, [
-                              _vm._v("pedido frete")
-                            ]),
-                            _vm._v(" "),
-                            _c("p", { staticClass: "strong" }, [
-                              _vm._v(
-                                "R$ " +
-                                  _vm._s(
-                                    _vm.formatPrice(_vm.listproductNew.shipping)
+                          _vm.listproductNew.shipping > 0
+                            ? _c("li", [
+                                _c("p", { staticClass: "strong" }, [
+                                  _vm._v("pedido frete")
+                                ]),
+                                _vm._v(" "),
+                                _c("p", { staticClass: "strong" }, [
+                                  _vm._v(
+                                    "R$ " +
+                                      _vm._s(
+                                        _vm.formatPrice(
+                                          _vm.listproductNew.shipping
+                                        )
+                                      )
                                   )
-                              )
-                            ])
-                          ]),
+                                ])
+                              ])
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _vm.listproductNew.percDiscount > 0
+                            ? _c("li", [
+                                _c("p", { staticClass: "strong" }, [
+                                  _vm._v("pedido desconto")
+                                ]),
+                                _vm._v(" "),
+                                _c("p", { staticClass: "strong" }, [
+                                  _vm._v(
+                                    _vm._s(
+                                      _vm.formatPrice(
+                                        _vm.listproductNew.percDiscount
+                                      )
+                                    ) + " %"
+                                  )
+                                ])
+                              ])
+                            : _vm._e(),
                           _vm._v(" "),
                           _c("li", [
                             _c("p", { staticClass: "strong" }, [
@@ -41200,41 +41279,49 @@ var render = function() {
                     ),
                     _vm._v(" "),
                     _c("div", { staticClass: "order-details-cart__footer" }, [
-                      _c(
-                        "p",
-                        {
-                          staticClass:
-                            "order-details-cart__total-amount order-details__justified"
-                        },
-                        [
-                          _c("span", [_vm._v("Subtotal")]),
-                          _vm._v(" "),
-                          _c("span", [
-                            _vm._v(
-                              "R$ " +
-                                _vm._s(_vm.formatPrice(demand.sub_total_price))
-                            )
-                          ])
-                        ]
-                      ),
+                      demand.sub_total_price !== demand.total_price
+                        ? _c(
+                            "p",
+                            {
+                              staticClass:
+                                "order-details-cart__total-amount order-details__justified"
+                            },
+                            [
+                              _c("span", [_vm._v("Subtotal")]),
+                              _vm._v(" "),
+                              _c("span", [
+                                _vm._v(
+                                  "R$ " +
+                                    _vm._s(
+                                      _vm.formatPrice(demand.sub_total_price)
+                                    )
+                                )
+                              ])
+                            ]
+                          )
+                        : _vm._e(),
                       _vm._v(" "),
-                      _c(
-                        "p",
-                        {
-                          staticClass:
-                            "order-details-cart__total-amount order-details__justified"
-                        },
-                        [
-                          _c("span", [_vm._v("Frete")]),
-                          _vm._v(" "),
-                          _c("span", [
-                            _vm._v(
-                              "R$ " +
-                                _vm._s(_vm.formatPrice(demand.shipping_price))
-                            )
-                          ])
-                        ]
-                      ),
+                      demand.shipping_price > 0
+                        ? _c(
+                            "p",
+                            {
+                              staticClass:
+                                "order-details-cart__total-amount order-details__justified"
+                            },
+                            [
+                              _c("span", [_vm._v("Frete")]),
+                              _vm._v(" "),
+                              _c("span", [
+                                _vm._v(
+                                  "R$ " +
+                                    _vm._s(
+                                      _vm.formatPrice(demand.shipping_price)
+                                    )
+                                )
+                              ])
+                            ]
+                          )
+                        : _vm._e(),
                       _vm._v(" "),
                       _c(
                         "p",
@@ -41418,39 +41505,44 @@ var render = function() {
                                   : _vm._e()
                               }),
                               _vm._v(" "),
-                              _c("li", [
-                                _c("p", { staticClass: "strong" }, [
-                                  _vm._v("Pedido Subtotal")
-                                ]),
-                                _vm._v(" "),
-                                _c("p", { staticClass: "strong" }, [
-                                  _vm._v(
-                                    "R$ " +
-                                      _vm._s(
-                                        _vm.formatPrice(
-                                          listdemand.sub_total_price
-                                        )
+                              listdemand.sub_total_price !==
+                              listdemand.total_price
+                                ? _c("li", [
+                                    _c("p", { staticClass: "strong" }, [
+                                      _vm._v("Pedido Subtotal")
+                                    ]),
+                                    _vm._v(" "),
+                                    _c("p", { staticClass: "strong" }, [
+                                      _vm._v(
+                                        "R$ " +
+                                          _vm._s(
+                                            _vm.formatPrice(
+                                              listdemand.sub_total_price
+                                            )
+                                          )
                                       )
-                                  )
-                                ])
-                              ]),
+                                    ])
+                                  ])
+                                : _vm._e(),
                               _vm._v(" "),
-                              _c("li", [
-                                _c("p", { staticClass: "strong" }, [
-                                  _vm._v("Pedido Frete")
-                                ]),
-                                _vm._v(" "),
-                                _c("p", { staticClass: "strong" }, [
-                                  _vm._v(
-                                    "R$ " +
-                                      _vm._s(
-                                        _vm.formatPrice(
-                                          listdemand.shipping_price
-                                        )
+                              listdemand.shipping_price > 0
+                                ? _c("li", [
+                                    _c("p", { staticClass: "strong" }, [
+                                      _vm._v("Pedido Frete")
+                                    ]),
+                                    _vm._v(" "),
+                                    _c("p", { staticClass: "strong" }, [
+                                      _vm._v(
+                                        "R$ " +
+                                          _vm._s(
+                                            _vm.formatPrice(
+                                              listdemand.shipping_price
+                                            )
+                                          )
                                       )
-                                  )
-                                ])
-                              ]),
+                                    ])
+                                  ])
+                                : _vm._e(),
                               _vm._v(" "),
                               _c("li", [
                                 _c("p", { staticClass: "strong" }, [
@@ -41571,7 +41663,8 @@ var render = function() {
               id: "idemaillogin",
               name: "emaillogin",
               value: "",
-              type: "email"
+              type: "email",
+              placeholder: "email"
             },
             domProps: { value: _vm.fields.email, value: _vm.$v.email.$model },
             on: {
@@ -41620,9 +41713,20 @@ var render = function() {
                 rawName: "v-model",
                 value: _vm.fields.password,
                 expression: "fields.password"
+              },
+              {
+                name: "model",
+                rawName: "v-model.trim",
+                value: _vm.$v.password.$model,
+                expression: "$v.password.$model",
+                modifiers: { trim: true }
               }
             ],
             staticClass: "form-control",
+            class: {
+              "is-invalid": _vm.$v.password.$error,
+              "is-valid": !_vm.$v.password.$invalid
+            },
             attrs: {
               id: "idpasswordlogin",
               name: "passwordlogin",
@@ -41630,18 +41734,42 @@ var render = function() {
               type: "password",
               placeholder: "senha"
             },
-            domProps: { value: _vm.fields.password },
+            domProps: {
+              value: _vm.fields.password,
+              value: _vm.$v.password.$model
+            },
             on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
+              input: [
+                function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(
+                    _vm.$v.password,
+                    "$model",
+                    $event.target.value.trim()
+                  )
+                },
+                function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.fields, "password", $event.target.value)
                 }
-                _vm.$set(_vm.fields, "password", $event.target.value)
+              ],
+              blur: function($event) {
+                return _vm.$forceUpdate()
               }
             }
           }),
           _vm._v(" "),
-          _vm._m(1)
+          _vm._m(1),
+          _vm._v(" "),
+          _c("div", { staticClass: "invalid-feedback" }, [
+            !_vm.$v.password.required
+              ? _c("span", [_vm._v("Senha está vazia!")])
+              : _vm._e()
+          ])
         ]),
         _vm._v(" "),
         _vm._m(2)

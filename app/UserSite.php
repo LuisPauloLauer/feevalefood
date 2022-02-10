@@ -61,4 +61,9 @@ class UserSite extends Authenticatable
     {
         return $this->hasMany(mdSocialAccount::class);
     }
+
+    public function pesqUniversityBuilding()
+    {
+        return $this->belongsTo(mdUniversitybuildings::class, 'universitybuilding', 'id');
+    }
 }

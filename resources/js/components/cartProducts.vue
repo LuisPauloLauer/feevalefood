@@ -30,8 +30,9 @@
                     <div class="cartbox__total">
                         <ul>
                             <li><span class="cartbox__total__title">Quantidade total</span><span class="price">{{listproductNew.totalQty}}</span></li>
-                            <li><span class="cartbox__total__title">Valor subtotal</span><span class="price">R$ {{formatPrice(listproductNew.subTotalPrice)}}</span></li>
-                            <li><span class="cartbox__total__title">Valor da entrega</span><span class="price">R$ {{formatPrice(listproductNew.shipping)}}</span></li>
+                            <li v-if="listproductNew.subTotalPrice !== listproductNew.totalPrice"><span class="cartbox__total__title">Valor subtotal</span><span class="price">R$ {{formatPrice(listproductNew.subTotalPrice)}}</span></li>
+                            <li v-if="listproductNew.shipping > 0"><span class="cartbox__total__title">Valor da entrega</span><span class="price">R$ {{formatPrice(listproductNew.shipping)}}</span></li>
+                            <li v-if="listproductNew.percDiscount > 0"><span class="cartbox__total__title">Desconto %</span><span class="price">{{listproductNew.percDiscount}} %</span></li>
                             <li class="grandtotal">Valor total<span class="price">R$ {{formatPrice(listproductNew.totalPrice)}}</span></li>
                         </ul>
                     </div>
@@ -129,7 +130,7 @@
             }
         },
         mounted() {
-            console.log(this.listproductNew);
+
         }
     }
 </script>

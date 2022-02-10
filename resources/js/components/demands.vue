@@ -26,11 +26,11 @@
                                 </li>
                             </ul>
                             <div class="order-details-cart__footer">
-                                <p class="order-details-cart__total-amount order-details__justified">
+                                <p v-if="demand.sub_total_price !== demand.total_price" class="order-details-cart__total-amount order-details__justified">
                                     <span>Subtotal</span>
                                     <span>R$&nbsp;{{formatPrice(demand.sub_total_price)}}</span>
                                 </p>
-                                <p class="order-details-cart__total-amount order-details__justified">
+                                <p v-if="demand.shipping_price > 0" class="order-details-cart__total-amount order-details__justified">
                                     <span>Frete</span>
                                     <span>R$&nbsp;{{formatPrice(demand.shipping_price)}}</span>
                                 </p>
@@ -79,17 +79,17 @@
                                                     <p class="strong">Produtos</p>
                                                     <p class="strong">total</p>
                                                 </li>
-                                                    <li v-for="(listdemanditens, index) in listdemanditensNew" v-if="listdemanditens.demand == listdemand.demand">
-                                                        <p v-if="listdemanditens.kit_name">{{listdemanditens.kit_name}} x{{listdemanditens.amount}}</p>
-                                                        <p v-else>{{listdemanditens.product_name}} x{{listdemanditens.amount}}</p>
-                                                        <p v-if="listdemanditens.kit_price">R$&nbsp;{{ formatPrice(listdemanditens.kit_price * listdemanditens.amount) }}</p>
-                                                        <p v-else>R$&nbsp;{{ formatPrice(listdemanditens.product_price * listdemanditens.amount) }}</p>
-                                                    </li>
-                                                <li>
+                                                <li v-for="(listdemanditens, index) in listdemanditensNew" v-if="listdemanditens.demand == listdemand.demand">
+                                                    <p v-if="listdemanditens.kit_name">{{listdemanditens.kit_name}} x{{listdemanditens.amount}}</p>
+                                                    <p v-else>{{listdemanditens.product_name}} x{{listdemanditens.amount}}</p>
+                                                    <p v-if="listdemanditens.kit_price">R$&nbsp;{{ formatPrice(listdemanditens.kit_price * listdemanditens.amount) }}</p>
+                                                    <p v-else>R$&nbsp;{{ formatPrice(listdemanditens.product_price * listdemanditens.amount) }}</p>
+                                                </li>
+                                                <li v-if="listdemand.sub_total_price !== listdemand.total_price">
                                                     <p class="strong">Pedido Subtotal</p>
                                                     <p class="strong">R$&nbsp;{{formatPrice(listdemand.sub_total_price)}}</p>
                                                 </li>
-                                                <li>
+                                                <li v-if="listdemand.shipping_price > 0">
                                                     <p class="strong">Pedido Frete</p>
                                                     <p class="strong">R$&nbsp;{{formatPrice(listdemand.shipping_price)}}</p>
                                                 </li>

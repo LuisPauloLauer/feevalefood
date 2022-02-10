@@ -2,7 +2,7 @@
 <div>
     <form @submit.prevent="submitForm">
         <div class="input-group mb-3">
-            <input id="idemaillogin" name="emaillogin" value="" type="email" class="form-control" v-model="fields.email" v-model.trim="$v.email.$model"
+            <input id="idemaillogin" name="emaillogin" value="" type="email" class="form-control" placeholder="email" v-model="fields.email" v-model.trim="$v.email.$model"
                    :class="{ 'is-invalid':$v.email.$error, 'is-valid':!$v.email.$invalid }">
             <div class="input-group-append">
                 <div class="input-group-text">
@@ -16,11 +16,15 @@
             </div>
         </div>
         <div class="input-group mb-3">
-            <input id="idpasswordlogin" name="passwordlogin" value="" type="password" class="form-control" placeholder="senha" v-model="fields.password">
+            <input id="idpasswordlogin" name="passwordlogin" value="" type="password" class="form-control" placeholder="senha" v-model="fields.password" v-model.trim="$v.password.$model"
+                   :class="{ 'is-invalid':$v.password.$error, 'is-valid':!$v.password.$invalid }">
             <div class="input-group-append">
                 <div class="input-group-text">
                     <span class="fa fa-lock"></span>
                 </div>
+            </div>
+            <div class="invalid-feedback">
+                <span v-if="!$v.password.required">Senha está vazia!</span>
             </div>
         </div>
         <div class="single-input">
@@ -41,6 +45,7 @@
                 appUrlDashboard: config.APP_URL_DASHBOARD,
                 storeNew: this.store,
                 email:  '',
+                password: '',
                 fields: {},
                 userSite: {},
             }
@@ -60,6 +65,9 @@
                         }, 350 + Math.random() * 300)
                     })
                 }
+            },
+            password:{
+                required
             }
         },
         computed: {
@@ -79,7 +87,7 @@
                                 response.data.user
                             ).then(response => {
                                 if(response.data.success === true){
-                                    window.location.reload();
+                                    window.location.assign(response.data.redirecturl);
                                 } else {
                                     toastr.error(response.data.message);
                                 }
