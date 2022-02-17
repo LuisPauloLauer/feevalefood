@@ -3,7 +3,7 @@
 @section('content')
     <!-- Start checkOut -->
     <div id="checkout-product">
-        <div-checkout-product :listproduct="{{$cartProduct}}" :liststorepayment="{{$listStorePayment}}"></div-checkout-product>
+        <div-checkout-product :usersite="{{$userSite}}" :listproduct="{{$cartProduct}}" :liststorepayment="{{$listStorePayment}}"></div-checkout-product>
     </div>
     <!-- End checkOut -->
 @endsection

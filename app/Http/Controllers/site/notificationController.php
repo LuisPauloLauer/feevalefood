@@ -113,7 +113,8 @@ class notificationController extends Controller
                 $response['success'] = false;
                 $response['message'] =  'Erro ao enviar mensagem de aviso do pedido ('.$demand->id.') para o whatsApp '.
                                         'Contate com a loja pelo numero: '.$foneStore;
-                $response['messageerror'] = $exception;
+                $response['messagelink'] = 'https://api.whatsapp.com/send?l=pt_br&phone=55'.$foneStore.'&text=Olá%20gostaria%20de%20avisar%20sobre%20a%20inclusão%20do%20pedido:%20'.$demand->id.'%20empresa:%20'.$building->company_name;
+                $response['phone']      = $foneStore;
                 echo json_encode($response);
                 return;
             }

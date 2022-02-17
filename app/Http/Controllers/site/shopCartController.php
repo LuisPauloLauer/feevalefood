@@ -503,9 +503,11 @@ class shopCartController extends Controller
         } else if (Session::has('shopCartKit') || Session::has('shopCartProduct')){
             $request->session()->forget('returnurlcallback');
             $request->session()->forget('showModalLoginUser');
+            $userSite = json_encode(Session::get('userSiteLogged'));
             $cartProduct =  json_encode(Session::get('shopCartProduct'));
             $storePayment = mdStoresPayment::where('status', 'S')->where('store', Session::get('shopCartProduct')->store)->where('type_payment_local', 'loja')->orderBy('id', 'asc')->get();
             return view('site.checkout.checkout',[
+                'userSite'          => $userSite,
                 'cartProduct'       => $cartProduct,
                 'listStorePayment'  => $storePayment
             ]);

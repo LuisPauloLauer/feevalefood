@@ -53,6 +53,38 @@
             </div>
         </div>
         <!-- End modal change of money -->
+        <!-- Start modal change of money -->
+        <div id="idModalWhatsapp" class="modal fade" role="dialog" @click.self="onCloseModalWhats">
+            <div class="modal-whatsapp modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content modal-whatsapp-content">
+                    <div class="modal-header modal-whatsapp-header">
+                        <div class="container text-center">
+                            <h5>Pedido N° {{ notificatios.demand }}</h5>
+                        </div>
+                    </div>
+                    <div class="modal-body modal-change-money-body">
+                        <div class="container-fluid">
+                            <div class="card-body text-center">
+                                <h5> Olá {{ usersiteNew.name }}</h5>
+                                <h5>Ocorreu um erro ao enviar a mensagem de aviso do pedido {{ notificatios.demand }} para o whatsApp da loja.</h5>
+                                <h5>Por favor contate com a loja pelo numero: <span id="phone-mask-whatsapp" v-html="notificatios.phone"></span></h5>
+                                <h5>Ou diretamente pelo whatsApp clicando no link abaixo:</h5>
+                                <a v-bind:href="notificatios.linkWhatsapp" target="_blank" type="button" class="btn btn-success"  data-mdb-ripple-color="dark">
+                                    Enviar mensagem <i class="fab fa-whatsapp"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer modal-whatsapp-footer">
+                        <div class="container text-center">
+                            <h5>Para ver o seu pedido clique no link abaixo:</h5>
+                            <a class="btn btn-danger" v-bind:href="appUrl+'/pedidos'">Ver pedido</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End modal change of money -->
         <!-- Start Bradcaump area -->
         <div class="ht__bradcaump__area bg-image--18">
             <div class="ht__bradcaump__wrap d-flex align-items-center">
@@ -191,10 +223,11 @@
     import {Money} from 'v-money';
     export default {
         components: {Money},
-        props: ['listproduct', 'liststorepayment'],
+        props: ['usersite', 'listproduct', 'liststorepayment'],
         data() {
             return {
                 appUrl: config.APP_URL,
+                usersiteNew: this.usersite,
                 listproductNew: this.listproduct,
                 liststorepaymentNew: this.liststorepayment,
                 notSelectedTypePayment: true,
@@ -210,10 +243,19 @@
                     precision: 2,
                     masked: false
                 },
+                notificatios: {
+                    demand: null,
+                    phone: '',
+                    message: '',
+                    linkWhatsapp: ''
+                },
                 csrf: document.head.querySelector('meta[name="csrf-token"]').content
             }
         },
         methods: {
+            onCloseModalWhats(){
+                window.location.href= ''+this.appUrl+'/pedidos';
+            },
             formatPrice(value) {
                 let val = (value / 1).toFixed(2).replace('.', ',')
                 return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
@@ -282,16 +324,20 @@
                             money_change: this.changeOfMoney
                         }).then(response => {
                             if(response.data.success === true){
+                                this.notificatios.demand = response.data.idDemand;
                                 axios.get( this.appUrl+'/send-message/whatsapp/'+response.data.idDemand).then(response => {
                                     if(response.data.success === true){
                                         window.location.href= ''+this.appUrl+'/pedidos';
                                     } else {
-                                        alert(response.data.message);
-                                        window.location.href= ''+this.appUrl+'/pedidos';
+                                        this.notificatios.phone = response.data.phone;
+                                        this.notificatios.message = response.data.message;
+                                        this.notificatios.linkWhatsapp = response.data.messagelink;
+                                        $('#phone-mask-whatsapp').mask('(00) 00000-0000');
+                                        $('#idModalWhatsapp').modal('show');
                                     }
                                 }).catch(error => {
-                                    alert('Erro ao mandar mensagem de aviso da inclusão do pedido para o whatsApp da loja!!!');
-                                    window.location.href= ''+this.appUrl+'/pedidos';
+                                    $('#phone-mask-whatsapp').mask('(00) 00000-0000');
+                                    $('#idModalWhatsapp').modal('show');
                                 });
                             } else {
                                 alert(response.data.message);
@@ -304,16 +350,20 @@
                             type_payment : this.selectedTypePaymentDescription
                         }).then(response => {
                             if(response.data.success === true){
+                                this.notificatios.demand = response.data.idDemand;
                                 axios.get( this.appUrl+'/send-message/whatsapp/'+response.data.idDemand).then(response => {
                                     if(response.data.success === true){
                                         window.location.href= ''+this.appUrl+'/pedidos';
                                     } else {
-                                        alert(response.data.message);
-                                        window.location.href= ''+this.appUrl+'/pedidos';
+                                        this.notificatios.phone = response.data.phone;
+                                        this.notificatios.message = response.data.message;
+                                        this.notificatios.linkWhatsapp = response.data.messagelink;
+                                        $('#phone-mask-whatsapp').mask('(00) 00000-0000');
+                                        $('#idModalWhatsapp').modal('show');
                                     }
                                 }).catch(error => {
-                                    alert('Erro ao mandar mensagem de aviso da inclusão do pedido para o whatsApp da loja!!!');
-                                    window.location.href= ''+this.appUrl+'/pedidos';
+                                    $('#phone-mask-whatsapp').mask('(00) 00000-0000');
+                                    $('#idModalWhatsapp').modal('show');
                                 });
                             } else {
                                 alert(response.data.message);
@@ -338,10 +388,10 @@
         align-items: baseline;
         justify-content: center;
     }
-    .modal-change-money-header, .modal-change-money-price-header{
+    .modal-change-money-header, .modal-change-money-price-header, .modal-whatsapp-header{
         border-bottom: 0;
     }
-    .modal-change-money-footer, .modal-change-money-price-footer{
+    .modal-change-money-footer, .modal-change-money-price-footer, .modal-whatsapp-footer{
         border-top: 0;
     }
 </style>

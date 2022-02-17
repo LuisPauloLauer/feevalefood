@@ -32,15 +32,16 @@ class mdDemandsFood extends Model
         }
 
         $store = mdStores::where('id', $store)->first();
+        $discountByEnterprise = UserSite::find($pIDUserSite)->pesqUniversityBuilding->percentage_discount;
 
-        $this->attributes['status']             = $statusDemand->id;
-        $this->attributes['store']              = $store->id;
-        $this->attributes['user_site']          = $pIDUserSite;
-        $this->attributes['type_deliver']       = $pTypeDelivery;
-        $this->attributes['type_payment']       = $pInformationPayment['typePayment'];
-        $this->attributes['invoice_number']     = $pInformationPayment['invoiceNumberPayment'];
-        $this->attributes['currency_payment']   = $pInformationPayment['currencyPayment'];
-        $this->attributes['money_change']       = $pInformationPayment['moneyChange'];
+        $this->attributes['status']                 = $statusDemand->id;
+        $this->attributes['store']                  = $store->id;
+        $this->attributes['user_site']              = $pIDUserSite;
+        $this->attributes['type_deliver']           = $pTypeDelivery;
+        $this->attributes['type_payment']           = $pInformationPayment['typePayment'];
+        $this->attributes['invoice_number']         = $pInformationPayment['invoiceNumberPayment'];
+        $this->attributes['currency_payment']       = $pInformationPayment['currencyPayment'];
+        $this->attributes['money_change']           = $pInformationPayment['moneyChange'];
 
         if($pKits){
             foreach($pKits as $Kit){
@@ -71,15 +72,26 @@ class mdDemandsFood extends Model
         $this->attributes['total_amount']               = $totalAmount;
         $this->attributes['sub_total_price']            = $subTotalPrice;
         $this->attributes['tax_price']                  = floatval ($pInformationPayment['taxPricePayment']);
-        $this->attributes['shipping_discount_price']    = floatval ($pInformationPayment['shippingDiscountPricePayment']);
+        $this->attributes['shipping_discount_price']    = 0;
         $this->attributes['insurance_price']            = floatval ($pInformationPayment['insurancePricePayment']);
         $this->attributes['handling_fee_price']         = floatval ($pInformationPayment['handlingFeePricePayment']);
+        $this->attributes['percentage_discount']        = $discountByEnterprise;
         if(strtoupper($pInformationPayment['typePayment']) == 'PAYPAL'){
-            $this->attributes['shipping_price']             = floatval ($pInformationPayment['shippingPricePayment']);
-            $this->attributes['total_price']                = floatval ($pInformationPayment['totalPayment']);
+            $this->attributes['shipping_price']     = floatval ($pInformationPayment['shippingPricePayment']);
+            if($discountByEnterprise > 0){
+                $this->attributes['value_discount']     = floatval($pInformationPayment['shippingDiscountPricePayment']);
+            }
+            $this->attributes['total_price']        = floatval ($pInformationPayment['totalPayment']);
         } else {
-            $this->attributes['shipping_price']             = $store->minimum_shipping;
-            $this->attributes['total_price']                = ($subTotalPrice + $store->minimum_shipping);
+            $this->attributes['shipping_price']     = $store->minimum_shipping;
+            if($discountByEnterprise > 0){
+                $this->attributes['value_discount']     = ($subTotalPrice + $store->minimum_shipping)/100*$discountByEnterprise;
+                $this->attributes['value_discount']     = number_format($this->attributes['value_discount'],2);
+                $this->attributes['total_price']        = ($subTotalPrice + $store->minimum_shipping) - $this->attributes['value_discount'];
+                $this->attributes['total_price']        = number_format($this->attributes['total_price'],2);
+            } else {
+                $this->attributes['total_price']        = ($subTotalPrice + $store->minimum_shipping);
+            }
         }
 
         try {

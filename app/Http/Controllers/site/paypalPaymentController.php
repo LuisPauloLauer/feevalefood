@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\mdDemandsFood;
 use App\Paypal\CreatePayment;
 use App\Paypal\ExecutePayment;
+use App\UserSite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
@@ -21,11 +22,14 @@ class paypalPaymentController extends Controller
     private $messageError           = null;
     // Delivery vars
     private $deliveryType           = null;
+    private $deliveryTypePayment    = null;
+    private $discountByEnterprise   = 0;
 
     public function create(Request $request)
     {
         if(Session::has('userSiteLogged')){
             $this->userSite = Session::get('userSiteLogged');
+            $this->discountByEnterprise = UserSite::find($this->userSite->id)->pesqUniversityBuilding->percentage_discount;
         }
         if(Session::has('shopCartKit')){
             $oldCartKit     = Session::get('shopCartKit');
@@ -45,13 +49,14 @@ class paypalPaymentController extends Controller
         }
 
         if(isset($request->delivery_type_payment)){
-            $deliveryTypePayment = $request->delivery_type_payment;
+            $this->deliveryTypePayment = $request->delivery_type_payment;
         } else {
-            $deliveryTypePayment = 'paypal';
+            $this->deliveryTypePayment = 'paypal';
         }
 
         $infoPayment = [
-            'deliveryTypePayment' => $deliveryTypePayment
+            'deliveryTypePayment' => $this->deliveryTypePayment,
+            'deliveryDiscount'    => $this->discountByEnterprise
         ];
 
         $objCreatePayment = new CreatePayment($infoPayment);

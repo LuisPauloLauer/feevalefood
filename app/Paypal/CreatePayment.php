@@ -40,6 +40,7 @@ class CreatePayment extends PayPal
         if ($pInfoPayment['deliveryTypePayment']) {
             parent::__construct();
             $this->methodPayment                    = $pInfoPayment['deliveryTypePayment'];
+            $this->shippingDiscountPricePayment     = $pInfoPayment['deliveryDiscount'];
             /*
             $this->currencyPayment                  = $pInfoPayment['currencyPayment'];
             $this->totalPayment                     = $pInfoPayment['totalPayment'];
@@ -162,6 +163,8 @@ class CreatePayment extends PayPal
             ->setInsurance($this->insurancePricePayment)
             //Valor da taxa de manuseio
             ->setHandlingFee($this->handlingFeePricePayment)
+            //cartão presente
+            //->setGiftWrap()
             //Valor total dos itens
             ->setSubtotal($this->subTotalPayment);
 
@@ -175,14 +178,27 @@ class CreatePayment extends PayPal
     {
         $objAmount = new Amount();
 
-        $totalPayment = (
+        $auxTotalPayment = (
             $this->taxPricePayment+
             $this->shippingPricePayment+
-            (-$this->shippingDiscountPricePayment)+
             $this->insurancePricePayment+
             $this->handlingFeePricePayment+
             $this->subTotalPayment
         );
+
+        $this->shippingDiscountPricePayment = ($auxTotalPayment/100*$this->shippingDiscountPricePayment);
+        $this->shippingDiscountPricePayment = number_format($this->shippingDiscountPricePayment,2);
+
+        $totalPayment = (
+            $this->taxPricePayment+
+            $this->shippingPricePayment+
+            (- $this->shippingDiscountPricePayment )+
+            $this->insurancePricePayment+
+            $this->handlingFeePricePayment+
+            $this->subTotalPayment
+        );
+
+        $totalPayment = number_format($totalPayment,2);
 
         $objAmount->setCurrency($this->currencyPayment)
 

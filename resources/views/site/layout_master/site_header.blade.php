@@ -50,7 +50,11 @@
                                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                                         <div class="dropdown-item">
                                             <div class="media">
-                                                <h3>Olá {{substr(Session::get('userSiteLogged')->name, 0, strpos(Session::get('userSiteLogged')->name, ' '))}}</h3>
+                                                @if(strpos(Session::get('userSiteLogged')->name, ' '))
+                                                    <h3>Olá {{substr(Session::get('userSiteLogged')->name, 0, strpos(Session::get('userSiteLogged')->name, ' '))}}</h3>
+                                                @else
+                                                    <h3>Olá {{Session::get('userSiteLogged')->name}}</h3>
+                                                @endif
                                             </div>
                                         </div>
                                         <div class="dropdown-divider"></div>

@@ -2312,16 +2312,49 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
     Money: v_money__WEBPACK_IMPORTED_MODULE_1__["Money"]
   },
-  props: ['listproduct', 'liststorepayment'],
+  props: ['usersite', 'listproduct', 'liststorepayment'],
   data: function data() {
     return {
       appUrl: _utils_config__WEBPACK_IMPORTED_MODULE_0__["default"].APP_URL,
+      usersiteNew: this.usersite,
       listproductNew: this.listproduct,
       liststorepaymentNew: this.liststorepayment,
       notSelectedTypePayment: true,
@@ -2337,10 +2370,19 @@ __webpack_require__.r(__webpack_exports__);
         precision: 2,
         masked: false
       },
+      notificatios: {
+        demand: null,
+        phone: '',
+        message: '',
+        linkWhatsapp: ''
+      },
       csrf: document.head.querySelector('meta[name="csrf-token"]').content
     };
   },
   methods: {
+    onCloseModalWhats: function onCloseModalWhats() {
+      window.location.href = '' + this.appUrl + '/pedidos';
+    },
     formatPrice: function formatPrice(value) {
       var val = (value / 1).toFixed(2).replace('.', ',');
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -2413,16 +2455,20 @@ __webpack_require__.r(__webpack_exports__);
             money_change: this.changeOfMoney
           }).then(function (response) {
             if (response.data.success === true) {
+              _this.notificatios.demand = response.data.idDemand;
               axios.get(_this.appUrl + '/send-message/whatsapp/' + response.data.idDemand).then(function (response) {
                 if (response.data.success === true) {
                   window.location.href = '' + _this.appUrl + '/pedidos';
                 } else {
-                  alert(response.data.message);
-                  window.location.href = '' + _this.appUrl + '/pedidos';
+                  _this.notificatios.phone = response.data.phone;
+                  _this.notificatios.message = response.data.message;
+                  _this.notificatios.linkWhatsapp = response.data.messagelink;
+                  $('#phone-mask-whatsapp').mask('(00) 00000-0000');
+                  $('#idModalWhatsapp').modal('show');
                 }
               })["catch"](function (error) {
-                alert('Erro ao mandar mensagem de aviso da inclusão do pedido para o whatsApp da loja!!!');
-                window.location.href = '' + _this.appUrl + '/pedidos';
+                $('#phone-mask-whatsapp').mask('(00) 00000-0000');
+                $('#idModalWhatsapp').modal('show');
               });
             } else {
               alert(response.data.message);
@@ -2435,16 +2481,20 @@ __webpack_require__.r(__webpack_exports__);
             type_payment: this.selectedTypePaymentDescription
           }).then(function (response) {
             if (response.data.success === true) {
+              _this.notificatios.demand = response.data.idDemand;
               axios.get(_this.appUrl + '/send-message/whatsapp/' + response.data.idDemand).then(function (response) {
                 if (response.data.success === true) {
                   window.location.href = '' + _this.appUrl + '/pedidos';
                 } else {
-                  alert(response.data.message);
-                  window.location.href = '' + _this.appUrl + '/pedidos';
+                  _this.notificatios.phone = response.data.phone;
+                  _this.notificatios.message = response.data.message;
+                  _this.notificatios.linkWhatsapp = response.data.messagelink;
+                  $('#phone-mask-whatsapp').mask('(00) 00000-0000');
+                  $('#idModalWhatsapp').modal('show');
                 }
               })["catch"](function (error) {
-                alert('Erro ao mandar mensagem de aviso da inclusão do pedido para o whatsApp da loja!!!');
-                window.location.href = '' + _this.appUrl + '/pedidos';
+                $('#phone-mask-whatsapp').mask('(00) 00000-0000');
+                $('#idModalWhatsapp').modal('show');
               });
             } else {
               alert(response.data.message);
@@ -2471,6 +2521,14 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/utils/config */ "./resources/js/utils/config.js");
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -7564,7 +7622,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.payment-cash-modal__input-container {\n    font-size: 1.375rem;\n    color: #a6a5a5;\n    font-weight: bold;\n    display: flex;\n    align-items: baseline;\n    justify-content: center;\n}\n.modal-change-money-header, .modal-change-money-price-header{\n    border-bottom: 0;\n}\n.modal-change-money-footer, .modal-change-money-price-footer{\n    border-top: 0;\n}\n", ""]);
+exports.push([module.i, "\n.payment-cash-modal__input-container {\n    font-size: 1.375rem;\n    color: #a6a5a5;\n    font-weight: bold;\n    display: flex;\n    align-items: baseline;\n    justify-content: center;\n}\n.modal-change-money-header, .modal-change-money-price-header, .modal-whatsapp-header{\n    border-bottom: 0;\n}\n.modal-change-money-footer, .modal-change-money-price-footer, .modal-whatsapp-footer{\n    border-top: 0;\n}\n", ""]);
 
 // exports
 
@@ -40664,6 +40722,108 @@ var render = function() {
       ]
     ),
     _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: { id: "idModalWhatsapp", role: "dialog" },
+        on: {
+          click: function($event) {
+            if ($event.target !== $event.currentTarget) {
+              return null
+            }
+            return _vm.onCloseModalWhats($event)
+          }
+        }
+      },
+      [
+        _c(
+          "div",
+          {
+            staticClass:
+              "modal-whatsapp modal-dialog modal-dialog-centered modal-lg"
+          },
+          [
+            _c("div", { staticClass: "modal-content modal-whatsapp-content" }, [
+              _c("div", { staticClass: "modal-header modal-whatsapp-header" }, [
+                _c("div", { staticClass: "container text-center" }, [
+                  _c("h5", [
+                    _vm._v("Pedido N° " + _vm._s(_vm.notificatios.demand))
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-body modal-change-money-body" }, [
+                _c("div", { staticClass: "container-fluid" }, [
+                  _c("div", { staticClass: "card-body text-center" }, [
+                    _c("h5", [_vm._v(" Olá " + _vm._s(_vm.usersiteNew.name))]),
+                    _vm._v(" "),
+                    _c("h5", [
+                      _vm._v(
+                        "Ocorreu um erro ao enviar a mensagem de aviso do pedido " +
+                          _vm._s(_vm.notificatios.demand) +
+                          " para o whatsApp da loja."
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("h5", [
+                      _vm._v("Por favor contate com a loja pelo numero: "),
+                      _c("span", {
+                        attrs: { id: "phone-mask-whatsapp" },
+                        domProps: { innerHTML: _vm._s(_vm.notificatios.phone) }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("h5", [
+                      _vm._v(
+                        "Ou diretamente pelo whatsApp clicando no link abaixo:"
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "a",
+                      {
+                        staticClass: "btn btn-success",
+                        attrs: {
+                          href: _vm.notificatios.linkWhatsapp,
+                          target: "_blank",
+                          type: "button",
+                          "data-mdb-ripple-color": "dark"
+                        }
+                      },
+                      [
+                        _vm._v(
+                          "\n                                Enviar mensagem "
+                        ),
+                        _c("i", { staticClass: "fab fa-whatsapp" })
+                      ]
+                    )
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-footer modal-whatsapp-footer" }, [
+                _c("div", { staticClass: "container text-center" }, [
+                  _c("h5", [
+                    _vm._v("Para ver o seu pedido clique no link abaixo:")
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "a",
+                    {
+                      staticClass: "btn btn-danger",
+                      attrs: { href: _vm.appUrl + "/pedidos" }
+                    },
+                    [_vm._v("Ver pedido")]
+                  )
+                ])
+              ])
+            ])
+          ]
+        )
+      ]
+    ),
+    _vm._v(" "),
     _c("div", { staticClass: "ht__bradcaump__area bg-image--18" }, [
       _c(
         "div",
@@ -41323,6 +41483,25 @@ var render = function() {
                           )
                         : _vm._e(),
                       _vm._v(" "),
+                      demand.percentage_discount > 0
+                        ? _c(
+                            "p",
+                            {
+                              staticClass:
+                                "order-details-cart__total-amount order-details__justified"
+                            },
+                            [
+                              _c("span", [_vm._v("Desconto")]),
+                              _vm._v(" "),
+                              _c("span", [
+                                _vm._v(
+                                  _vm._s(demand.percentage_discount) + " %"
+                                )
+                              ])
+                            ]
+                          )
+                        : _vm._e(),
+                      _vm._v(" "),
                       _c(
                         "p",
                         {
@@ -41539,6 +41718,21 @@ var render = function() {
                                               listdemand.shipping_price
                                             )
                                           )
+                                      )
+                                    ])
+                                  ])
+                                : _vm._e(),
+                              _vm._v(" "),
+                              listdemand.percentage_discount > 0
+                                ? _c("li", [
+                                    _c("p", { staticClass: "strong" }, [
+                                      _vm._v("Pedido desconto")
+                                    ]),
+                                    _vm._v(" "),
+                                    _c("p", { staticClass: "strong" }, [
+                                      _vm._v(
+                                        _vm._s(listdemand.percentage_discount) +
+                                          " %"
                                       )
                                     ])
                                   ])

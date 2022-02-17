@@ -34,6 +34,10 @@
                                     <span>Frete</span>
                                     <span>R$&nbsp;{{formatPrice(demand.shipping_price)}}</span>
                                 </p>
+                                <p v-if="demand.percentage_discount > 0" class="order-details-cart__total-amount order-details__justified">
+                                    <span>Desconto</span>
+                                    <span>{{demand.percentage_discount}} %</span>
+                                </p>
                                 <p class="order-details-cart__total-amount order-details__justified">
                                     <span>Total</span>
                                     <span>R$&nbsp;{{formatPrice(demand.total_price)}}</span>
@@ -92,6 +96,10 @@
                                                 <li v-if="listdemand.shipping_price > 0">
                                                     <p class="strong">Pedido Frete</p>
                                                     <p class="strong">R$&nbsp;{{formatPrice(listdemand.shipping_price)}}</p>
+                                                </li>
+                                                <li v-if="listdemand.percentage_discount > 0">
+                                                    <p class="strong">Pedido desconto</p>
+                                                    <p class="strong">{{listdemand.percentage_discount}} %</p>
                                                 </li>
                                                 <li>
                                                     <p class="strong">Pedido Total</p>

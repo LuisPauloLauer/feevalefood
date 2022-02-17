@@ -7,7 +7,6 @@ use App\CartProduct;
 use App\Http\Controllers\Controller;
 use App\mdDemandsFood;
 use App\mdStores;
-use App\UserSite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -158,6 +157,8 @@ class UserSiteDemandController extends Controller
                                             'ped.total_amount',
                                             'ped.sub_total_price',
                                             'ped.shipping_price',
+                                            'ped.percentage_discount',
+                                            'ped.value_discount',
                                             'ped.total_price',
                                             'ped.created_at',
                                             DB::raw('date_format(ped.created_at, "%d/%m/%Y") as created_at_date'),
