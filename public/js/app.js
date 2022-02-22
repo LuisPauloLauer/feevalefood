@@ -1967,7 +1967,16 @@ module.exports = {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _utils_config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/utils/config */ "./resources/js/utils/config.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _utils_config__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/utils/config */ "./resources/js/utils/config.js");
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
 //
 //
 //
@@ -2025,45 +2034,57 @@ var spanMiniCartQnt = $('#id-mini-cart-qnt'),
   props: ['listproduct'],
   data: function data() {
     return {
-      appUrl: _utils_config__WEBPACK_IMPORTED_MODULE_0__["default"].APP_URL,
+      appUrl: _utils_config__WEBPACK_IMPORTED_MODULE_1__["default"].APP_URL,
+      appUrlDashboard: _utils_config__WEBPACK_IMPORTED_MODULE_1__["default"].APP_URL_DASHBOARD,
+      isStoreOpen: false,
       listproductNew: this.listproduct,
       csrf: document.head.querySelector('meta[name="csrf-token"]').content
     };
   },
   methods: {
+    getStoreOpen: function getStoreOpen() {
+      var _this = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        var response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return axios.get(_this.appUrlDashboard + '/api/store/delivery/status/2');
+
+              case 2:
+                response = _context.sent;
+
+                if (response.status == 200) {
+                  if (response.data.success) {
+                    _this.isStoreOpen = response.data.isStoreOpen;
+                  } else {
+                    console.error(response.data.message);
+                  }
+                } else {
+                  console.error('Erro ao buscar status da loja');
+                }
+
+              case 4:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
+    },
     formatPrice: function formatPrice(value) {
       var val = (value / 1).toFixed(2).replace('.', ',');
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     },
     deleteItemCart: function deleteItemCart(object, idItem) {
-      var _this = this;
+      var _this2 = this;
 
       axios.post(this.appUrl + '/carrinho/deletar-item', {
         product_object: object,
         product_id: idItem
-      }).then(function (response) {
-        if (response.data.success === true) {
-          _this.listproductNew = response.data.cartProduct;
-
-          if (!_this.listproductNew) {
-            spanMiniCartQnt.text('0');
-          } else {
-            spanMiniCartQnt.text(_this.listproductNew.totalQty);
-          }
-        } else {
-          alert('Erro ao deletar item do carrinho');
-        }
-      })["catch"](function (error) {
-        alert('Erro ao deletar item do carrinho');
-      });
-    },
-    addItemCart: function addItemCart(object, idItem) {
-      var _this2 = this;
-
-      axios.post(this.appUrl + '/carrinho/editar-item', {
-        product_object: object,
-        product_id: idItem,
-        product_operator: 'plus'
       }).then(function (response) {
         if (response.data.success === true) {
           _this2.listproductNew = response.data.cartProduct;
@@ -2080,13 +2101,13 @@ var spanMiniCartQnt = $('#id-mini-cart-qnt'),
         alert('Erro ao deletar item do carrinho');
       });
     },
-    minusItemCart: function minusItemCart(object, idItem) {
+    addItemCart: function addItemCart(object, idItem) {
       var _this3 = this;
 
       axios.post(this.appUrl + '/carrinho/editar-item', {
         product_object: object,
         product_id: idItem,
-        product_operator: 'minus'
+        product_operator: 'plus'
       }).then(function (response) {
         if (response.data.success === true) {
           _this3.listproductNew = response.data.cartProduct;
@@ -2103,11 +2124,36 @@ var spanMiniCartQnt = $('#id-mini-cart-qnt'),
         alert('Erro ao deletar item do carrinho');
       });
     },
+    minusItemCart: function minusItemCart(object, idItem) {
+      var _this4 = this;
+
+      axios.post(this.appUrl + '/carrinho/editar-item', {
+        product_object: object,
+        product_id: idItem,
+        product_operator: 'minus'
+      }).then(function (response) {
+        if (response.data.success === true) {
+          _this4.listproductNew = response.data.cartProduct;
+
+          if (!_this4.listproductNew) {
+            spanMiniCartQnt.text('0');
+          } else {
+            spanMiniCartQnt.text(_this4.listproductNew.totalQty);
+          }
+        } else {
+          alert('Erro ao deletar item do carrinho');
+        }
+      })["catch"](function (error) {
+        alert('Erro ao deletar item do carrinho');
+      });
+    },
     checkOut: function checkOut() {
       window.location.href = this.appUrl + '/pedido/finalizar';
     }
   },
-  mounted: function mounted() {}
+  mounted: function mounted() {
+    this.getStoreOpen();
+  }
 });
 
 /***/ }),
@@ -2776,12 +2822,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _this.$v.$touch();
 
                 if (_this.$v.$invalid) {
-                  _context.next = 5;
+                  _context.next = 4;
                   break;
                 }
 
-                _this.fields.store = _this.store.id;
-                _context.next = 5;
+                _context.next = 4;
                 return axios.post(_this.appUrlDashboard + '/api/usuario/login/email', _this.fields).then(function (response) {
                   if (response.data.success === true) {
                     //this.userSite.user = response.data.user;
@@ -2802,7 +2847,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   console.error(error.response.data);
                 });
 
-              case 5:
+              case 4:
               case "end":
                 return _context.stop();
             }
@@ -40319,7 +40364,7 @@ var render = function() {
       _vm._m(0),
       _vm._v(" "),
       _c("div", { staticClass: "cartbox__inner text-left" }, [
-        _vm.listproductNew
+        _vm.listproductNew && _vm.isStoreOpen
           ? _c("div", [
               _c(
                 "div",
@@ -40497,7 +40542,11 @@ var render = function() {
                 )
               ])
             ])
-          : _c("div", [_c("h5", [_vm._v("Carrinho vazio")])])
+          : _c("div", [
+              _vm.isStoreOpen
+                ? _c("h5", [_vm._v("Carrinho vazio")])
+                : _c("h5", [_vm._v("Loja está fechada")])
+            ])
       ])
     ])
   ])
@@ -57241,7 +57290,8 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   APP_URL: 'http://localhost/delivery_feevale/public',
-  APP_URL_DASHBOARD: 'http://localhost/delivery_d/public'
+  APP_URL_DASHBOARD: 'http://localhost/delivery_d/public',
+  APP_STORE_ID: 2
 });
 
 /***/ }),

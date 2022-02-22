@@ -76,7 +76,6 @@
             async submitForm(){
                 this.$v.$touch();
                 if(!this.$v.$invalid){
-                    this.fields.store = this.store.id;
                     await axios.post( this.appUrlDashboard+'/api/usuario/login/email',
                         this.fields
                     ).then(response => {

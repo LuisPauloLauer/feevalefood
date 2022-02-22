@@ -86,9 +86,9 @@
                         <div class="footer__inner">
                             <div class="lst__post__list">
                                 @foreach($listLastProducts as $lastProduct)
-                                    <div class="single__sm__post">
+                                <div class="single__sm__post">
                                     <div class="sin__post__thumb">
-                                        <a href="" class="view-product-info d-flex" data-object="product" data-prodid="{{$lastProduct->id}}">
+                                        <img href="" class="view-product-info d-flex" data-object="product" data-prodid="{{$lastProduct->id}}">
                                             @if($lastProduct::find($lastProduct->id)->pesqFirstImageProduct)
                                                 <img class="lst__post__list__img" src="{{ $pathImagens }}/products/store_id_{{$Store->id}}/{{ $lastProduct->id}}/small/{{ $lastProduct::find($lastProduct->id)->pesqFirstImageProduct->path_image }}" alt="blog images">
                                             @else

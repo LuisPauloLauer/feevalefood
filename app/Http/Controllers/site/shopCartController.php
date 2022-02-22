@@ -7,6 +7,7 @@ use App\CartKit;
 use App\CartProduct;
 use App\Http\Controllers\Controller;
 use App\Library\FilesControl;
+use App\Library\GeneralLibrary;
 use App\mdCategoriesProduct;
 use App\mdDemandsFood;
 use App\mdImagensKits;
@@ -22,10 +23,16 @@ use Illuminate\Support\Facades\Session;
 class shopCartController extends Controller
 {
     private $idOfStore = null;
+    private $isStoreOpen = false;
 
     public function __construct()
     {
         $this->idOfStore = env('APP_STORE_ID');
+        $this->generalLibrary = new GeneralLibrary();
+    }
+
+    function __destruct() {
+        unset($this->generalLibrary);
     }
 
     public function showModalProduct(Request $request)
@@ -494,7 +501,9 @@ class shopCartController extends Controller
 
     public function checkOutCart(Request $request)
     {
-        if(!Session::has('shopCartKit') && !Session::has('shopCartProduct')){
+        if(!$this->generalLibrary->isStoreOpenToDelivery()){
+            return redirect()->route('home.index');
+        } else if(!Session::has('shopCartKit') && !Session::has('shopCartProduct')){
             return redirect()->route('home.index');
         } else if(!Session::has('userSiteLogged')){
             $urlCallBack = url()->current();

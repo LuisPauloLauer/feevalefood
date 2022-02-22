@@ -4,13 +4,13 @@
 namespace App\Library;
 
 
+use App\mdDaysOfWeek;
+use App\mdDeliveryStoreTimes;
 use App\mdRelStoresUsersAdm;
 use App\mdStores;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use function App\Http\Controllers\site\numeroAjuste;
-use function App\Http\Controllers\site\numeroSanitize;
 
 class GeneralLibrary
 {
@@ -84,6 +84,37 @@ class GeneralLibrary
         return $UsersAdm = User::whereIn('id', $inUsersAdmStore)->orderBy('id','asc')->get();
     }
 
+    public function isStoreOpenToDelivery(){
+
+        $daysOfWeek = [
+            "Monday"        => "Segunda",
+            "Tuesday"       => "Terça",
+            "Wednesday"     => "Quarta",
+            "Thursday"      => "Quinta",
+            "Friday"        => "Sexta",
+            "Saturday"      => "Sábado",
+            "Sunday"        => "Domingo"
+        ];
+
+        $Store = mdStores::where('id', env('APP_STORE_ID'))->first();
+
+        if(strtoupper($Store->status) === 'N' || strtoupper($Store->active_store_site) === 'N'){
+            return false;
+        } else {
+            $dateTymeNow = now();
+            $dayOfWeekBR = $daysOfWeek[$dateTymeNow->dayName];
+            $dayOfWeekData = mdDaysOfWeek::where('day', '=', $dayOfWeekBR)->first();
+            $deliveryTimeDayOfWeek = mdDeliveryStoreTimes::where('store', $Store->id)->where('status', 'S')->where('day', $dayOfWeekData->id)->first();
+
+            if($dateTymeNow->isBetween($deliveryTimeDayOfWeek->periodo1_ini, $deliveryTimeDayOfWeek->periodo1_end) || $dateTymeNow->isBetween($deliveryTimeDayOfWeek->periodo2_ini, $deliveryTimeDayOfWeek->periodo2_end)){
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    //Adjuste Phone number
     private function numberAdjust($pNumber, $pAdd9, $pDel9)
     {
         if($pAdd9) {
@@ -139,6 +170,7 @@ class GeneralLibrary
         return preg_replace('/[^0-9]/', '', $pNumber);
     }
 
+    //Adjuste Phone number digit 9
     public function adjustDigitNumberNine($pNumber, $pAdd9=true, $pDel9=false)
     {
         if (empty($pNumber))
@@ -150,6 +182,7 @@ class GeneralLibrary
         return $number;
     }
 
+    //Validate Phone Number
     public function validatePhoneNumber($phoneNumber)
     {
         $phoneNumber = trim(str_replace('/', '', str_replace(' ', '', str_replace('-', '', str_replace(')', '', str_replace('(', '', $phoneNumber))))));

@@ -4,7 +4,7 @@
         <div class="cartbox text-right">
             <button class="btn cartbox-close"><i class="fa fa-close"></i></button>
             <div class="cartbox__inner text-left">
-                <div v-if="listproductNew">
+                <div v-if="listproductNew && isStoreOpen">
                     <div class="cartbox__items">
                         <div v-for="(listproduct, index) in listproductNew.items">
                             <div class="cartbox__item">
@@ -41,7 +41,8 @@
                     </div>
                 </div>
                 <div v-else>
-                    <h5>Carrinho vazio</h5>
+                    <h5 v-if="isStoreOpen">Carrinho vazio</h5>
+                    <h5 v-else>Loja está fechada</h5>
                 </div>
             </div>
         </div>
@@ -57,11 +58,25 @@
         data() {
             return {
                 appUrl: config.APP_URL,
+                appUrlDashboard: config.APP_URL_DASHBOARD,
+                isStoreOpen : false,
                 listproductNew: this.listproduct,
                 csrf: document.head.querySelector('meta[name="csrf-token"]').content
             }
         },
         methods: {
+            async getStoreOpen(){
+                const  response = await axios.get(this.appUrlDashboard+'/api/store/delivery/status/2');
+                if(response.status == 200){
+                    if(response.data.success){
+                        this.isStoreOpen = response.data.isStoreOpen;
+                    } else {
+                        console.error(response.data.message);
+                    }
+                } else {
+                    console.error('Erro ao buscar status da loja');
+                }
+            },
             formatPrice(value) {
                 let val = (value / 1).toFixed(2).replace('.', ',')
                 return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
@@ -130,7 +145,7 @@
             }
         },
         mounted() {
-
+            this.getStoreOpen();
         }
     }
 </script>

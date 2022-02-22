@@ -4,6 +4,8 @@ namespace App\Http\Controllers\site;
 
 use App\Http\Controllers\Controller;
 use App\Library\FilesControl;
+use App\Library\GeneralLibrary;
+use App\mdDaysOfWeek;
 use App\mdDeliveryStoreTimes;
 use App\mdSegments;
 use App\mdStores;
@@ -12,16 +14,25 @@ use Illuminate\Support\Facades\Config;
 
 class indexController extends Controller
 {
+    private $generalLibrary;
     private $idOfStore = null;
+    private $isStoreOpen = false;
 
     public function __construct()
     {
         $this->idOfStore = env('APP_STORE_ID');
+        $this->generalLibrary = new GeneralLibrary();
+    }
+
+    function __destruct() {
+        unset($this->generalLibrary);
     }
 
     public function index()
     {
         $pathImagens = FilesControl::getPathImages();
+
+        $this->isStoreOpen = $this->generalLibrary->isStoreOpenToDelivery();
 
         $Store = mdStores::where('id', $this->idOfStore)->first();
 
@@ -41,6 +52,7 @@ class indexController extends Controller
 
         return view('site.siteHome',[
             'pathImagens'               => $pathImagens,
+            'isStoreOpen'               => $this->isStoreOpen,
             'Store'                     => $Store,
             'listStoreTimes'            => $storeTimes,
             'listCategoriesProducts'    => $CategoriesProducts,

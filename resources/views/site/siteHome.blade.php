@@ -58,22 +58,28 @@
                         <div class="dish-action">
                             <div class="dish-tooltip">
                                 <div class="dish-action__add-wrapper">
-                                    <div class="dish-action__counter">
-                                        <div class="marmita-counter">
-                                            <button id="btn-model-minus-car-qnty" type="button" class="btn btn-outline-danger btn-icon">
-                                                <span class="glyphicon fa fa-minus"></span>
-                                            </button>
-                                            <div id="qntyProdCart" class="marmita-counter__value"></div>
-                                            <button id="btn-model-add-car-qnty" type="button" class="btn btn-outline-danger btn-icon"><span
-                                                    class="glyphicon fa fa-plus"></span></button>
+                                    @if($isStoreOpen)
+                                        <div class="dish-action__counter">
+                                            <div class="marmita-counter">
+                                                <button id="btn-model-minus-car-qnty" type="button" class="btn btn-outline-danger btn-icon">
+                                                    <span class="glyphicon fa fa-minus"></span>
+                                                </button>
+                                                <div id="qntyProdCart" class="marmita-counter__value"></div>
+                                                <button id="btn-model-add-car-qnty" type="button" class="btn btn-outline-danger btn-icon"><span
+                                                        class="glyphicon fa fa-plus"></span></button>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <button id="btn-model-add-car" class="btn btn-danger btn--default btn--size-m">
-                                        <div class="dish-action__add-button">
-                                            <span id="btn-model-add-car-texto">Adicionar</span>
-                                            <span id="btn-model-add-car-price"></span>
+                                        <button id="btn-model-add-car" class="btn btn-danger btn--default btn--size-m">
+                                            <div class="dish-action__add-button">
+                                                <span id="btn-model-add-car-texto">Adicionar</span>
+                                                <span id="btn-model-add-car-price"></span>
+                                            </div>
+                                        </button>
+                                    @else
+                                        <div class="container">
+                                            <h3><span class="badge badge-warning">LOJA FECHADA</span></h3>
                                         </div>
-                                    </button>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -226,6 +232,13 @@
                                                         @foreach($listKit as $Kit)
                                                             @if($CategoryProducts->id == $Kit->category_product)
                                                                 <div class="col-md-6 food__menu">
+                                                                    @if(!$isStoreOpen)
+                                                                        <div class="ribbon-wrapper ribbon-xl">
+                                                                            <div class="ribbon bg-warning text-lg">
+                                                                                Loja fechada
+                                                                            </div>
+                                                                        </div>
+                                                                    @endif
                                                                     <div class="food__menu__thumb">
                                                                         <a href="" class="view-product-info d-flex" data-object="kit" data-prodid="{{$Kit->id}}">
                                                                             @if($Kit::find($Kit->id)->pesqFirstImageKit)
@@ -258,6 +271,13 @@
                                                         @foreach($listProduct as $Product)
                                                             @if($CategoryProducts->id == $Product->category_product)
                                                                 <div class="col-md-6 food__menu">
+                                                                    @if(!$isStoreOpen)
+                                                                        <div class="ribbon-wrapper ribbon-xl">
+                                                                            <div class="ribbon bg-warning text-lg">
+                                                                                Loja fechada
+                                                                            </div>
+                                                                        </div>
+                                                                    @endif
                                                                     <div class="food__menu__thumb">
                                                                         <a href="" class="view-product-info d-flex" data-object="product" data-prodid="{{$Product->id}}">
                                                                             @if($Product::find($Product->id)->pesqFirstImageProduct)
@@ -298,6 +318,13 @@
                                                         @foreach($listKit as $Kit)
                                                             @if($CategoryProducts->id == $Kit->category_product)
                                                                 <div class="col-md-6 food__menu">
+                                                                    @if(!$isStoreOpen)
+                                                                        <div class="ribbon-wrapper ribbon-xl">
+                                                                            <div class="ribbon bg-warning text-lg">
+                                                                                Loja fechada
+                                                                            </div>
+                                                                        </div>
+                                                                    @endif
                                                                     <div class="food__menu__thumb">
                                                                         <a href="" class="view-product-info d-flex" data-object="kit" data-prodid="{{$Kit->id}}">
                                                                             @if($Kit::find($Kit->id)->pesqFirstImageKit)
@@ -336,6 +363,13 @@
                                                         @foreach($listProduct as $Product)
                                                             @if($CategoryProducts->id == $Product->category_product)
                                                                 <div class="col-md-6 food__menu">
+                                                                    @if(!$isStoreOpen)
+                                                                        <div class="ribbon-wrapper ribbon-xl">
+                                                                            <div class="ribbon bg-warning text-lg">
+                                                                                Loja fechada
+                                                                            </div>
+                                                                        </div>
+                                                                    @endif
                                                                     <div class="food__menu__thumb">
                                                                         <a href="" class="view-product-info d-flex" data-object="product" data-prodid="{{$Product->id}}">
                                                                             @if($Product::find($Product->id)->pesqFirstImageProduct)
@@ -480,6 +514,13 @@
                     @foreach($listMoreSaleKit as $saleKit)
                         <div class="col-lg-4 col-md-4 col-sm-12">
                             <div class="food__item foo">
+                                @if(!$isStoreOpen)
+                                    <div class="ribbon-wrapper ribbon-xl">
+                                        <div class="ribbon bg-warning text-lg">
+                                            Loja fechada
+                                        </div>
+                                    </div>
+                                @endif
                                 <div class="food__thumb">
                                     <a href="" class="view-product-info d-flex" data-object="kit"
                                        data-prodid="{{$saleKit->id}}">
@@ -501,6 +542,13 @@
                     @foreach($listMoreSaleProduct as $saleProduct)
                         <div class="col-lg-4 col-md-4 col-sm-12">
                             <div class="food__item foo">
+                                @if(!$isStoreOpen)
+                                    <div class="ribbon-wrapper ribbon-xl">
+                                        <div class="ribbon bg-warning text-lg">
+                                            Loja fechada
+                                        </div>
+                                    </div>
+                                @endif
                                 <div class="food__thumb">
                                     <a href="" class="view-product-info d-flex" data-object="product"
                                        data-prodid="{{$saleProduct->id}}">
