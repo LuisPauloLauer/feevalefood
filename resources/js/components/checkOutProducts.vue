@@ -85,6 +85,26 @@
             </div>
         </div>
         <!-- End modal change of money -->
+        <!-- Start modal change of money -->
+        <div id="idModalStoreOpen" class="modal fade" role="dialog">
+            <div class="modal-store-open modal-dialog modal-dialog-centered">
+                <div class="modal-content modal-store-open-content">
+                    <div class="modal-header modal-store-open-header">
+                        <div class="container text-center">
+                            <h4 class="modal-title" align="center">Loja está fechada</h4>
+                        </div>
+                    </div>
+                    <div class="modal-body modal-store-open-body">
+                        <h5 align="center" style="margin:0;">Clique abaixo para voltar para home page</h5>
+                    </div>
+                    <div class="modal-footer modal-store-open-footer">
+                        <div class="container text-center">
+                            <a class="btn btn-danger" v-bind:href="appUrl">Home</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- Start Bradcaump area -->
         <div class="ht__bradcaump__area bg-image--18">
             <div class="ht__bradcaump__wrap d-flex align-items-center">
@@ -227,9 +247,11 @@
         data() {
             return {
                 appUrl: config.APP_URL,
+                appUrlDashboard: config.APP_URL_DASHBOARD,
                 usersiteNew: this.usersite,
                 listproductNew: this.listproduct,
                 liststorepaymentNew: this.liststorepayment,
+                isStoreOpen : false,
                 notSelectedTypePayment: true,
                 selectedTypePaymentName: null,
                 selectedTypePaymentDescription: null,
@@ -253,6 +275,18 @@
             }
         },
         methods: {
+            async getStoreOpen(){
+                const  response = await axios.get(this.appUrlDashboard+'/api/store/delivery/status/2');
+                if(response.status == 200){
+                    if(response.data.success){
+                        return response.data.isStoreOpen;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            },
             onCloseModalWhats(){
                 window.location.href= ''+this.appUrl+'/pedidos';
             },
@@ -293,89 +327,94 @@
                     $('#idModalChangeMoneyPrice').modal('hide');
                 }
             },
-            exeCheckOut() {
-                if (this.selectedTypePaymentName !== null) {
-                    if (this.selectedTypePaymentName == 'paypal') {
-                        window.location.href = this.appUrl+'/paypal/pagar';
-                        /*
-                         axios.get( this.appUrl+'/paypal/pagar'
-                        ).then(response => {
-                            if(response.data.success === true){
-                                axios.get( this.appUrl+'/send-message/whatsapp/'+response.data.idDemand).then(response => {
-                                    if(response.data.success === true){
+            async exeCheckOut() {
+                if(await this.getStoreOpen()){
+                    if (this.selectedTypePaymentName !== null) {
+                        if (this.selectedTypePaymentName == 'paypal') {
+                            window.location.href = this.appUrl+'/paypal/pagar';
+                            /*
+                             axios.get( this.appUrl+'/paypal/pagar'
+                            ).then(response => {
+                                if(response.data.success === true){
+                                    axios.get( this.appUrl+'/send-message/whatsapp/'+response.data.idDemand).then(response => {
+                                        if(response.data.success === true){
+                                            window.location.href= ''+this.appUrl+'/pedidos';
+                                        } else {
+                                            alert(response.data.message);
+                                            window.location.href= ''+this.appUrl+'/pedidos';
+                                        }
+                                    }).catch(error => {
+                                        alert('Erro ao mandar mensagem!!!');
                                         window.location.href= ''+this.appUrl+'/pedidos';
-                                    } else {
-                                        alert(response.data.message);
-                                        window.location.href= ''+this.appUrl+'/pedidos';
-                                    }
-                                }).catch(error => {
-                                    alert('Erro ao mandar mensagem!!!');
-                                    window.location.href= ''+this.appUrl+'/pedidos';
-                                });
-                            } else {
-                                alert(response.data.message);
-                            }
-                        }).catch(error => {
-                            alert('Erro ao fazer o pedido!!!');
-                        }); */
-                    } else if (this.selectedTypePaymentName == 'dinheiro') {
-                         axios.post( this.appUrl+'/pedido/criar-pedido', {
-                            type_payment : this.selectedTypePaymentDescription,
-                            money_change: this.changeOfMoney
-                        }).then(response => {
-                            if(response.data.success === true){
-                                this.notificatios.demand = response.data.idDemand;
-                                axios.get( this.appUrl+'/send-message/whatsapp/'+response.data.idDemand).then(response => {
-                                    if(response.data.success === true){
-                                        window.location.href= ''+this.appUrl+'/pedidos';
-                                    } else {
-                                        this.notificatios.phone = response.data.phone;
-                                        this.notificatios.message = response.data.message;
-                                        this.notificatios.linkWhatsapp = response.data.messagelink;
+                                    });
+                                } else {
+                                    alert(response.data.message);
+                                }
+                            }).catch(error => {
+                                alert('Erro ao fazer o pedido!!!');
+                            }); */
+                        } else if (this.selectedTypePaymentName == 'dinheiro') {
+                            axios.post( this.appUrl+'/pedido/criar-pedido', {
+                                type_payment : this.selectedTypePaymentDescription,
+                                money_change: this.changeOfMoney
+                            }).then(response => {
+                                if(response.data.success === true){
+                                    this.notificatios.demand = response.data.idDemand;
+                                    axios.get( this.appUrl+'/send-message/whatsapp/'+response.data.idDemand).then(response => {
+                                        if(response.data.success === true){
+                                            window.location.href= ''+this.appUrl+'/pedidos';
+                                        } else {
+                                            this.notificatios.phone = response.data.phone;
+                                            this.notificatios.message = response.data.message;
+                                            this.notificatios.linkWhatsapp = response.data.messagelink;
+                                            $('#phone-mask-whatsapp').mask('(00) 00000-0000');
+                                            $('#idModalWhatsapp').modal('show');
+                                        }
+                                    }).catch(error => {
                                         $('#phone-mask-whatsapp').mask('(00) 00000-0000');
                                         $('#idModalWhatsapp').modal('show');
-                                    }
-                                }).catch(error => {
-                                    $('#phone-mask-whatsapp').mask('(00) 00000-0000');
-                                    $('#idModalWhatsapp').modal('show');
-                                });
-                            } else {
-                                alert(response.data.message);
-                            }
-                        }).catch(error => {
-                            alert('Erro ao fazer o pedido!!!');
-                        });
-                    } else {
-                         axios.post( this.appUrl+'/pedido/criar-pedido', {
-                            type_payment : this.selectedTypePaymentDescription
-                        }).then(response => {
-                            if(response.data.success === true){
-                                this.notificatios.demand = response.data.idDemand;
-                                axios.get( this.appUrl+'/send-message/whatsapp/'+response.data.idDemand).then(response => {
-                                    if(response.data.success === true){
-                                        window.location.href= ''+this.appUrl+'/pedidos';
-                                    } else {
-                                        this.notificatios.phone = response.data.phone;
-                                        this.notificatios.message = response.data.message;
-                                        this.notificatios.linkWhatsapp = response.data.messagelink;
+                                    });
+                                } else {
+                                    alert(response.data.message);
+                                }
+                            }).catch(error => {
+                                alert('Erro ao fazer o pedido!!!');
+                            });
+                        } else {
+                            axios.post( this.appUrl+'/pedido/criar-pedido', {
+                                type_payment : this.selectedTypePaymentDescription
+                            }).then(response => {
+                                if(response.data.success === true){
+                                    this.notificatios.demand = response.data.idDemand;
+                                    axios.get( this.appUrl+'/send-message/whatsapp/'+response.data.idDemand).then(response => {
+                                        if(response.data.success === true){
+                                            window.location.href= ''+this.appUrl+'/pedidos';
+                                        } else {
+                                            this.notificatios.phone = response.data.phone;
+                                            this.notificatios.message = response.data.message;
+                                            this.notificatios.linkWhatsapp = response.data.messagelink;
+                                            $('#phone-mask-whatsapp').mask('(00) 00000-0000');
+                                            $('#idModalWhatsapp').modal('show');
+                                        }
+                                    }).catch(error => {
                                         $('#phone-mask-whatsapp').mask('(00) 00000-0000');
                                         $('#idModalWhatsapp').modal('show');
-                                    }
-                                }).catch(error => {
-                                    $('#phone-mask-whatsapp').mask('(00) 00000-0000');
-                                    $('#idModalWhatsapp').modal('show');
-                                });
-                            } else {
-                                alert(response.data.message);
-                            }
-                        }).catch(error => {
-                            alert('Erro ao fazer o pedido!!!');
-                        });
+                                    });
+                                } else {
+                                    alert(response.data.message);
+                                }
+                            }).catch(error => {
+                                alert('Erro ao fazer o pedido!!!');
+                            });
+                        }
                     }
+                } else {
+                    $('#idModalStoreOpen').modal('show');
                 }
             }
         },
         mounted() {
+            this.isStoreOpen = this.getStoreOpen();
         }
     }
 </script>
@@ -388,10 +427,10 @@
         align-items: baseline;
         justify-content: center;
     }
-    .modal-change-money-header, .modal-change-money-price-header, .modal-whatsapp-header{
+    .modal-change-money-header, .modal-change-money-price-header, .modal-whatsapp-header, .modal-store-open-header{
         border-bottom: 0;
     }
-    .modal-change-money-footer, .modal-change-money-price-footer, .modal-whatsapp-footer{
+    .modal-change-money-footer, .modal-change-money-price-footer, .modal-whatsapp-footer, .modal-store-open-footer{
         border-top: 0;
     }
 </style>

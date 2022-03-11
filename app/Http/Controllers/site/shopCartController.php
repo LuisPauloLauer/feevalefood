@@ -502,6 +502,10 @@ class shopCartController extends Controller
     public function checkOutCart(Request $request)
     {
         if(!$this->generalLibrary->isStoreOpenToDelivery()){
+            if(Session::has('shopCartKit') || Session::has('shopCartProduct')){
+                $request->session()->forget('shopCartKit');
+                $request->session()->forget('shopCartProduct');
+            }
             return redirect()->route('home.index');
         } else if(!Session::has('shopCartKit') && !Session::has('shopCartProduct')){
             return redirect()->route('home.index');

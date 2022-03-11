@@ -11,6 +11,7 @@ use App\mdSegments;
 use App\mdStores;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Session;
 
 class indexController extends Controller
 {
@@ -28,7 +29,7 @@ class indexController extends Controller
         unset($this->generalLibrary);
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $pathImagens = FilesControl::getPathImages();
 
@@ -49,6 +50,11 @@ class indexController extends Controller
         $moreSaleProducts = mdStores::find($Store->id)->pesqProductsByStore('S', null, true, 'sold', 'desc')->limit(6)->get();
 
         $lastProducts = mdStores::find($Store->id)->pesqProductsByStore('S', null, true, 'id', 'desc')->limit(3)->get();
+
+        if(!$this->isStoreOpen && (Session::has('shopCartKit') || Session::has('shopCartProduct'))){
+            $request->session()->forget('shopCartKit');
+            $request->session()->forget('shopCartProduct');
+        }
 
         return view('site.siteHome',[
             'pathImagens'               => $pathImagens,

@@ -2167,9 +2167,37 @@ var spanMiniCartQnt = $('#id-mini-cart-qnt'),
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _utils_config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/utils/config */ "./resources/js/utils/config.js");
-/* harmony import */ var v_money__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! v-money */ "./node_modules/v-money/dist/v-money.js");
-/* harmony import */ var v_money__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(v_money__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _utils_config__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/utils/config */ "./resources/js/utils/config.js");
+/* harmony import */ var v_money__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! v-money */ "./node_modules/v-money/dist/v-money.js");
+/* harmony import */ var v_money__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(v_money__WEBPACK_IMPORTED_MODULE_2__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2394,15 +2422,17 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
-    Money: v_money__WEBPACK_IMPORTED_MODULE_1__["Money"]
+    Money: v_money__WEBPACK_IMPORTED_MODULE_2__["Money"]
   },
   props: ['usersite', 'listproduct', 'liststorepayment'],
   data: function data() {
     return {
-      appUrl: _utils_config__WEBPACK_IMPORTED_MODULE_0__["default"].APP_URL,
+      appUrl: _utils_config__WEBPACK_IMPORTED_MODULE_1__["default"].APP_URL,
+      appUrlDashboard: _utils_config__WEBPACK_IMPORTED_MODULE_1__["default"].APP_URL_DASHBOARD,
       usersiteNew: this.usersite,
       listproductNew: this.listproduct,
       liststorepaymentNew: this.liststorepayment,
+      isStoreOpen: false,
       notSelectedTypePayment: true,
       selectedTypePaymentName: null,
       selectedTypePaymentDescription: null,
@@ -2426,6 +2456,51 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    getStoreOpen: function getStoreOpen() {
+      var _this = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        var response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return axios.get(_this.appUrlDashboard + '/api/store/delivery/status/2');
+
+              case 2:
+                response = _context.sent;
+
+                if (!(response.status == 200)) {
+                  _context.next = 11;
+                  break;
+                }
+
+                if (!response.data.success) {
+                  _context.next = 8;
+                  break;
+                }
+
+                return _context.abrupt("return", response.data.isStoreOpen);
+
+              case 8:
+                return _context.abrupt("return", false);
+
+              case 9:
+                _context.next = 12;
+                break;
+
+              case 11:
+                return _context.abrupt("return", false);
+
+              case 12:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
+    },
     onCloseModalWhats: function onCloseModalWhats() {
       window.location.href = '' + this.appUrl + '/pedidos';
     },
@@ -2469,90 +2544,120 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     exeCheckOut: function exeCheckOut() {
-      var _this = this;
+      var _this2 = this;
 
-      if (this.selectedTypePaymentName !== null) {
-        if (this.selectedTypePaymentName == 'paypal') {
-          window.location.href = this.appUrl + '/paypal/pagar';
-          /*
-           axios.get( this.appUrl+'/paypal/pagar'
-          ).then(response => {
-              if(response.data.success === true){
-                  axios.get( this.appUrl+'/send-message/whatsapp/'+response.data.idDemand).then(response => {
-                      if(response.data.success === true){
-                          window.location.href= ''+this.appUrl+'/pedidos';
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return _this2.getStoreOpen();
+
+              case 2:
+                if (!_context2.sent) {
+                  _context2.next = 6;
+                  break;
+                }
+
+                if (_this2.selectedTypePaymentName !== null) {
+                  if (_this2.selectedTypePaymentName == 'paypal') {
+                    window.location.href = _this2.appUrl + '/paypal/pagar';
+                    /*
+                     axios.get( this.appUrl+'/paypal/pagar'
+                    ).then(response => {
+                        if(response.data.success === true){
+                            axios.get( this.appUrl+'/send-message/whatsapp/'+response.data.idDemand).then(response => {
+                                if(response.data.success === true){
+                                    window.location.href= ''+this.appUrl+'/pedidos';
+                                } else {
+                                    alert(response.data.message);
+                                    window.location.href= ''+this.appUrl+'/pedidos';
+                                }
+                            }).catch(error => {
+                                alert('Erro ao mandar mensagem!!!');
+                                window.location.href= ''+this.appUrl+'/pedidos';
+                            });
+                        } else {
+                            alert(response.data.message);
+                        }
+                    }).catch(error => {
+                        alert('Erro ao fazer o pedido!!!');
+                    }); */
+                  } else if (_this2.selectedTypePaymentName == 'dinheiro') {
+                    axios.post(_this2.appUrl + '/pedido/criar-pedido', {
+                      type_payment: _this2.selectedTypePaymentDescription,
+                      money_change: _this2.changeOfMoney
+                    }).then(function (response) {
+                      if (response.data.success === true) {
+                        _this2.notificatios.demand = response.data.idDemand;
+                        axios.get(_this2.appUrl + '/send-message/whatsapp/' + response.data.idDemand).then(function (response) {
+                          if (response.data.success === true) {
+                            window.location.href = '' + _this2.appUrl + '/pedidos';
+                          } else {
+                            _this2.notificatios.phone = response.data.phone;
+                            _this2.notificatios.message = response.data.message;
+                            _this2.notificatios.linkWhatsapp = response.data.messagelink;
+                            $('#phone-mask-whatsapp').mask('(00) 00000-0000');
+                            $('#idModalWhatsapp').modal('show');
+                          }
+                        })["catch"](function (error) {
+                          $('#phone-mask-whatsapp').mask('(00) 00000-0000');
+                          $('#idModalWhatsapp').modal('show');
+                        });
                       } else {
-                          alert(response.data.message);
-                          window.location.href= ''+this.appUrl+'/pedidos';
+                        alert(response.data.message);
                       }
-                  }).catch(error => {
-                      alert('Erro ao mandar mensagem!!!');
-                      window.location.href= ''+this.appUrl+'/pedidos';
-                  });
-              } else {
-                  alert(response.data.message);
-              }
-          }).catch(error => {
-              alert('Erro ao fazer o pedido!!!');
-          }); */
-        } else if (this.selectedTypePaymentName == 'dinheiro') {
-          axios.post(this.appUrl + '/pedido/criar-pedido', {
-            type_payment: this.selectedTypePaymentDescription,
-            money_change: this.changeOfMoney
-          }).then(function (response) {
-            if (response.data.success === true) {
-              _this.notificatios.demand = response.data.idDemand;
-              axios.get(_this.appUrl + '/send-message/whatsapp/' + response.data.idDemand).then(function (response) {
-                if (response.data.success === true) {
-                  window.location.href = '' + _this.appUrl + '/pedidos';
-                } else {
-                  _this.notificatios.phone = response.data.phone;
-                  _this.notificatios.message = response.data.message;
-                  _this.notificatios.linkWhatsapp = response.data.messagelink;
-                  $('#phone-mask-whatsapp').mask('(00) 00000-0000');
-                  $('#idModalWhatsapp').modal('show');
+                    })["catch"](function (error) {
+                      alert('Erro ao fazer o pedido!!!');
+                    });
+                  } else {
+                    axios.post(_this2.appUrl + '/pedido/criar-pedido', {
+                      type_payment: _this2.selectedTypePaymentDescription
+                    }).then(function (response) {
+                      if (response.data.success === true) {
+                        _this2.notificatios.demand = response.data.idDemand;
+                        axios.get(_this2.appUrl + '/send-message/whatsapp/' + response.data.idDemand).then(function (response) {
+                          if (response.data.success === true) {
+                            window.location.href = '' + _this2.appUrl + '/pedidos';
+                          } else {
+                            _this2.notificatios.phone = response.data.phone;
+                            _this2.notificatios.message = response.data.message;
+                            _this2.notificatios.linkWhatsapp = response.data.messagelink;
+                            $('#phone-mask-whatsapp').mask('(00) 00000-0000');
+                            $('#idModalWhatsapp').modal('show');
+                          }
+                        })["catch"](function (error) {
+                          $('#phone-mask-whatsapp').mask('(00) 00000-0000');
+                          $('#idModalWhatsapp').modal('show');
+                        });
+                      } else {
+                        alert(response.data.message);
+                      }
+                    })["catch"](function (error) {
+                      alert('Erro ao fazer o pedido!!!');
+                    });
+                  }
                 }
-              })["catch"](function (error) {
-                $('#phone-mask-whatsapp').mask('(00) 00000-0000');
-                $('#idModalWhatsapp').modal('show');
-              });
-            } else {
-              alert(response.data.message);
+
+                _context2.next = 7;
+                break;
+
+              case 6:
+                $('#idModalStoreOpen').modal('show');
+
+              case 7:
+              case "end":
+                return _context2.stop();
             }
-          })["catch"](function (error) {
-            alert('Erro ao fazer o pedido!!!');
-          });
-        } else {
-          axios.post(this.appUrl + '/pedido/criar-pedido', {
-            type_payment: this.selectedTypePaymentDescription
-          }).then(function (response) {
-            if (response.data.success === true) {
-              _this.notificatios.demand = response.data.idDemand;
-              axios.get(_this.appUrl + '/send-message/whatsapp/' + response.data.idDemand).then(function (response) {
-                if (response.data.success === true) {
-                  window.location.href = '' + _this.appUrl + '/pedidos';
-                } else {
-                  _this.notificatios.phone = response.data.phone;
-                  _this.notificatios.message = response.data.message;
-                  _this.notificatios.linkWhatsapp = response.data.messagelink;
-                  $('#phone-mask-whatsapp').mask('(00) 00000-0000');
-                  $('#idModalWhatsapp').modal('show');
-                }
-              })["catch"](function (error) {
-                $('#phone-mask-whatsapp').mask('(00) 00000-0000');
-                $('#idModalWhatsapp').modal('show');
-              });
-            } else {
-              alert(response.data.message);
-            }
-          })["catch"](function (error) {
-            alert('Erro ao fazer o pedido!!!');
-          });
-        }
-      }
+          }
+        }, _callee2);
+      }))();
     }
   },
-  mounted: function mounted() {}
+  mounted: function mounted() {
+    this.isStoreOpen = this.getStoreOpen();
+  }
 });
 
 /***/ }),
@@ -7667,7 +7772,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.payment-cash-modal__input-container {\n    font-size: 1.375rem;\n    color: #a6a5a5;\n    font-weight: bold;\n    display: flex;\n    align-items: baseline;\n    justify-content: center;\n}\n.modal-change-money-header, .modal-change-money-price-header, .modal-whatsapp-header{\n    border-bottom: 0;\n}\n.modal-change-money-footer, .modal-change-money-price-footer, .modal-whatsapp-footer{\n    border-top: 0;\n}\n", ""]);
+exports.push([module.i, "\n.payment-cash-modal__input-container {\n    font-size: 1.375rem;\n    color: #a6a5a5;\n    font-weight: bold;\n    display: flex;\n    align-items: baseline;\n    justify-content: center;\n}\n.modal-change-money-header, .modal-change-money-price-header, .modal-whatsapp-header, .modal-store-open-header{\n    border-bottom: 0;\n}\n.modal-change-money-footer, .modal-change-money-price-footer, .modal-whatsapp-footer, .modal-store-open-footer{\n    border-top: 0;\n}\n", ""]);
 
 // exports
 
@@ -40873,6 +40978,50 @@ var render = function() {
       ]
     ),
     _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: { id: "idModalStoreOpen", role: "dialog" }
+      },
+      [
+        _c(
+          "div",
+          {
+            staticClass: "modal-store-open modal-dialog modal-dialog-centered"
+          },
+          [
+            _c(
+              "div",
+              { staticClass: "modal-content modal-store-open-content" },
+              [
+                _vm._m(2),
+                _vm._v(" "),
+                _vm._m(3),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "modal-footer modal-store-open-footer" },
+                  [
+                    _c("div", { staticClass: "container text-center" }, [
+                      _c(
+                        "a",
+                        {
+                          staticClass: "btn btn-danger",
+                          attrs: { href: _vm.appUrl }
+                        },
+                        [_vm._v("Home")]
+                      )
+                    ])
+                  ]
+                )
+              ]
+            )
+          ]
+        )
+      ]
+    ),
+    _vm._v(" "),
     _c("div", { staticClass: "ht__bradcaump__area bg-image--18" }, [
       _c(
         "div",
@@ -40896,7 +41045,7 @@ var render = function() {
                       [_vm._v("Home")]
                     ),
                     _vm._v(" "),
-                    _vm._m(2),
+                    _vm._m(4),
                     _vm._v(" "),
                     _c("span", { staticClass: "breadcrumb-item active" }, [
                       _vm._v("Checkout")
@@ -40944,7 +41093,7 @@ var render = function() {
                           "div",
                           { staticClass: "checkout-method accordion-body fix" },
                           [
-                            _vm._m(3),
+                            _vm._m(5),
                             _vm._v(" "),
                             _c(
                               "div",
@@ -41005,7 +41154,7 @@ var render = function() {
                                                     }
                                                   }),
                                                   _vm._v(" "),
-                                                  _vm._m(4)
+                                                  _vm._m(6)
                                                 ]
                                               )
                                             ]
@@ -41135,7 +41284,7 @@ var render = function() {
                       _c(
                         "ul",
                         [
-                          _vm._m(5),
+                          _vm._m(7),
                           _vm._v(" "),
                           _vm._l(_vm.listproductNew.items, function(
                             listproduct,
@@ -41282,6 +41431,28 @@ var staticRenderFns = [
         ])
       ]
     )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header modal-store-open-header" }, [
+      _c("div", { staticClass: "container text-center" }, [
+        _c("h4", { staticClass: "modal-title", attrs: { align: "center" } }, [
+          _vm._v("Loja está fechada")
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-body modal-store-open-body" }, [
+      _c("h5", { staticStyle: { margin: "0" }, attrs: { align: "center" } }, [
+        _vm._v("Clique abaixo para voltar para home page")
+      ])
+    ])
   },
   function() {
     var _vm = this
@@ -56864,6 +57035,7 @@ try {
 
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.withCredentials = true;
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting
