@@ -10,8 +10,8 @@ Technologies used:
 1. Vue.js to front end more html 5 and css 3. Version Vue: 2.6.12.
 1. MariaDB to data base. Version: 10.4.14-MariaDB.
 
-##### Website: [https://www.mercadocampobom.com/](https://www.mercadocampobom.com/)
-##### Dashboard: [https://www.mercadocampobom.com/dashboard](https://www.mercadocampobom.com/dashboard)
+##### Website: [https://www.arezzofood.com](https://www.www.arezzofood.com/)
+##### Dashboard: [https://www.pt-lietoo.com](https://www.pt-lietoo.com)
 
 ## Installation
 
